@@ -4,7 +4,7 @@
 <div class="container py-5">
     <h1 class="section-title mb-4">{{ isset($career->id) ? 'Edit career' : 'Create career' }}</h1>
 
-    <form action="{{ $route }}" method="POST" class="card border-0 shadow-sm p-4">
+    <form action="{{ $route }}" method="POST" enctype="multipart/form-data" class="card border-0 shadow-sm p-4">
         @csrf
         @if(isset($career->id))
             @method('PUT')
@@ -38,6 +38,11 @@
             <div class="col-12">
                 <label class="form-label">Description</label>
                 <textarea name="description" class="form-control" rows="6" required>{{ old('description', $career->description ?? '') }}</textarea>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Career Image</label>
+                <input type="file" name="image" class="form-control" accept="image/jpeg,image/png,image/webp">
+                @if($career->image)<img src="{{ Storage::url($career->image) }}" alt="Current career image" class="mt-2" style="max-width: 220px;">@endif
             </div>
             <div class="col-12">
                 <label class="form-label">Status</label>

@@ -21,8 +21,19 @@
             </div>
             <div class="col-md-6">
                 <label class="form-label">Hero image</label>
-                <input type="file" name="image" class="form-control" accept="image/jpeg,image/png,image/webp">
-                @if($banner->getAttribute('image'))<small class="text-muted d-block mt-1"><a href="{{ Storage::url($banner->getAttribute('image')) }}" target="_blank">View current image</a></small>@endif
+                <input type="file" name="image" id="banner-image" class="form-control" accept="image/jpeg,image/png,image/webp">
+                @if($banner->getAttribute('image'))<small class="text-muted d-block mt-1"><a href="{{ \Illuminate\Support\Str::startsWith($banner->getAttribute('image'), ['http://', 'https://']) ? $banner->getAttribute('image') : Storage::url($banner->getAttribute('image')) }}" target="_blank">View current image</a></small>@endif
+            </div>
+            <div class="col-12">
+                <label class="form-label">Public page preview</label>
+                <div class="hero-panel rounded" id="banner-preview" style="background-image: linear-gradient(rgba(16, 42, 67, .72), rgba(16, 42, 67, .72)), url('{{ $banner->getAttribute('image') ? (\Illuminate\Support\Str::startsWith($banner->getAttribute('image'), ['http://', 'https://']) ? $banner->getAttribute('image') : Storage::url($banner->getAttribute('image'))) : asset('images/hero-bg.jpg') }}');">
+                    <div class="hero-content">
+                        <p class="hero-kicker">Homepage header</p>
+                        <h1 id="preview-title">{{ $banner->title ?: 'Your banner title' }}</h1>
+                        <p id="preview-subtitle">{{ $banner->subtitle ?: 'Your banner description' }}</p>
+                        <span class="btn-accent" id="preview-button">{{ $banner->button_text ?: 'Button text' }}</span>
+                    </div>
+                </div>
             </div>
             <div class="col-md-6">
                 <label class="form-label">Button text</label>
@@ -46,4 +57,26 @@
         </div>
     </form>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const fields = {
+            title: document.querySelector('[name="title"]'),
+            subtitle: document.querySelector('[name="subtitle"]'),
+            button: document.querySelector('[name="button_text"]'),
+        };
+        const preview = {
+            title: document.getElementById('preview-title'),
+            subtitle: document.getElementById('preview-subtitle'),
+            button: document.getElementById('preview-button'),
+            panel: document.getElementById('banner-preview'),
+        };
+        Object.entries(fields).forEach(([key, field]) => field.addEventListener('input', () => {
+            preview[key].textContent = field.value || (key === 'title' ? 'Your banner title' : key === 'subtitle' ? 'Your banner description' : 'Button text');
+        }));
+        document.getElementById('banner-image').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) preview.panel.style.backgroundImage = `linear-gradient(rgba(16, 42, 67, .72), rgba(16, 42, 67, .72)), url('${URL.createObjectURL(file)}')`;
+        });
+    });
+</script>
 @endsection

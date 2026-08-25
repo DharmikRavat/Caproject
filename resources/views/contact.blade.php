@@ -1,54 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container py-5">
-    <div class="row g-5">
-        <div class="col-lg-5">
-            <span class="badge badge-soft px-3 py-2 rounded-pill mb-3">Contact</span>
-            <h1 class="section-title display-6 fw-bold">Let’s talk about your financial goals.</h1>
-            <p class="text-muted">Whether you need tax guidance, compliance support, or strategic planning, our team is ready to help.</p>
-            <ul class="list-unstyled text-muted">
-                <li><strong>Email:</strong> info@apexca.in</li>
-                <li><strong>Phone:</strong> +91 98765 43210</li>
-                <li><strong>Address:</strong> 24 Business Plaza, New Delhi</li>
-            </ul>
-        </div>
-        <div class="col-lg-7">
-            <div class="card border-0 shadow-sm rounded-4 p-4">
-                @if(session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                @endif
-
-                <form method="POST" action="{{ route('contact.submit') }}">
-                    @csrf
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Name</label>
-                            <input type="text" name="name" class="form-control" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Email</label>
-                            <input type="email" name="email" class="form-control" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Phone</label>
-                            <input type="text" name="phone" class="form-control">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Subject</label>
-                            <input type="text" name="subject" class="form-control" required>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label">Message</label>
-                            <textarea name="message" class="form-control" rows="5" required></textarea>
-                        </div>
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-primary-custom">Send enquiry</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+<section class="relative overflow-hidden bg-[#1a3251] px-5 py-14 lg:px-10"><div class="mx-auto max-w-7xl"><p class="mb-2 text-xs text-slate-300"><a href="{{ route('home') }}" class="hover:text-white">Home</a> <span class="mx-2 text-emerald-400">/</span> Contact Us</p><h1 class="text-4xl font-bold tracking-wide text-white">Contact Us</h1></div></section>
+<main class="mx-auto max-w-7xl space-y-12 px-5 py-12 lg:px-10">
+    @if(session('success'))<div class="border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm text-emerald-800" role="status">{{ session('success') }}</div>@endif
+    @if($errors->any())<div class="border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-800" role="alert"><ul class="list-disc pl-5">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
+    <section><h2 class="mb-4 text-3xl font-bold text-slate-900">{{ $siteSettings['contact_page_title'] }}</h2><p class="max-w-4xl text-base leading-8 text-slate-600">{{ $siteSettings['contact_page_intro'] }}</p></section>
+    <section class="grid items-start gap-10 lg:grid-cols-2"><div><h2 class="mb-2 text-2xl font-bold text-slate-900">Send Your Message</h2><p class="mb-6 text-sm text-slate-400">Your email address will not be published. Required fields are marked *</p><form method="POST" action="{{ route('contact.submit') }}" class="space-y-4">@csrf<div class="grid gap-4 md:grid-cols-2"><input type="text" name="name" value="{{ old('name') }}" placeholder="Name *" class="w-full border border-slate-200 p-3 text-sm focus:border-emerald-500 focus:outline-none" required><input type="text" name="phone" value="{{ old('phone') }}" placeholder="Phone" class="w-full border border-slate-200 p-3 text-sm focus:border-emerald-500 focus:outline-none"></div><input type="email" name="email" value="{{ old('email') }}" placeholder="Email *" class="w-full border border-slate-200 p-3 text-sm focus:border-emerald-500 focus:outline-none" required><input type="text" name="subject" value="{{ old('subject') }}" placeholder="Subject *" class="w-full border border-slate-200 p-3 text-sm focus:border-emerald-500 focus:outline-none" required><textarea name="message" placeholder="Comment *" rows="5" class="w-full border border-slate-200 p-3 text-sm focus:border-emerald-500 focus:outline-none" required>{{ old('message') }}</textarea><button type="submit" class="bg-emerald-600 px-8 py-3 text-xs font-bold uppercase tracking-wide text-white shadow-sm transition hover:bg-emerald-700">SUBMIT</button></form></div>
+        <div class="space-y-4"><div class="border border-slate-100 p-5 shadow-sm"><div class="flex items-start gap-4"><div class="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-emerald-300 text-emerald-600"><i class="fas fa-location-dot"></i></div><div><h3 class="font-bold text-slate-900">Address Info</h3><p class="mt-1 text-sm leading-6 text-slate-500">{{ $siteSettings['contact_address'] ?? '' }}</p></div></div></div><div class="border border-slate-100 p-5 shadow-sm"><div class="flex items-start gap-4"><div class="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-emerald-300 text-emerald-600"><i class="far fa-clock"></i></div><div><h3 class="font-bold text-slate-900">Office Schedule</h3><p class="mt-1 whitespace-pre-line text-sm leading-6 text-slate-500">{{ $siteSettings['contact_page_schedule'] }}</p></div></div></div><div class="border border-slate-100 p-5 shadow-sm"><div class="flex items-start gap-4"><div class="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-emerald-300 text-emerald-600"><i class="far fa-envelope"></i></div><div><h3 class="font-bold text-slate-900">Email &amp; Phone</h3><p class="mt-1 text-sm leading-6 text-slate-500">Phone: {{ $siteSettings['contact_phone'] ?? '' }}<br>Email: {{ $siteSettings['contact_email'] ?? '' }}</p></div></div></div></div>
+    </section>
+    @if($siteSettings['contact_page_map'] ?? false)<section class="h-80 overflow-hidden border border-slate-300"><iframe src="{{ $siteSettings['contact_page_map'] }}" width="100%" height="100%" style="border:0" allowfullscreen loading="lazy" title="Office location map"></iframe></section>@endif
+    <section><h2 class="mb-8 text-3xl font-bold text-slate-900">CA Services We Offer</h2><div class="grid gap-6 md:grid-cols-3">@forelse($contactServices as $service)<article class="flex h-full flex-col overflow-hidden border border-slate-200 bg-white text-center shadow-sm">@if($service->image)<img src="{{ Storage::url($service->image) }}" alt="{{ $service->title }}" class="h-48 w-full object-cover">@endif<div class="flex flex-grow flex-col p-6"><h3 class="mb-3 text-xl font-bold text-slate-900">{{ $service->title }}</h3><p class="mb-6 flex-grow text-sm leading-6 text-slate-500">{{ Str::limit($service->short_description ?? $service->description, 180) }}</p><a href="{{ route('service.show', $service->slug) }}" class="mx-auto bg-[#1a3251] px-6 py-2.5 text-xs font-bold text-white transition hover:bg-emerald-700">Read More</a></div></article>@empty<p class="text-slate-600">Services will be available soon.</p>@endforelse</div></section>
+</main>
 @endsection

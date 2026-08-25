@@ -20,6 +20,8 @@ class Blog extends Model
         'content',
         'image',
         'author',
+        'category',
+        'tags',
         'is_published',
     ];
 }

@@ -43,6 +43,10 @@
                 @endif
             </div>
         </div>
+
+        @include('components.admin.about-page-settings')
+        @include('components.admin.careers-page-settings')
+        @include('components.admin.contact-page-settings')
         
         <h5 class="mb-3 border-bottom pb-2">Social Links</h5>
         <div class="row g-3 mb-4">

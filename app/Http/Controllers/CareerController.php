@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Career;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class CareerController extends Controller
@@ -29,10 +30,14 @@ class CareerController extends Controller
             'experience' => 'nullable|string|max:255',
             'summary' => 'nullable|string',
             'description' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
             'is_active' => 'boolean',
         ]);
 
         $validated['slug'] = $validated['slug'] ?? Str::slug($validated['title']);
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('careers', 'public');
+        }
         Career::create($validated);
 
         return redirect()->route('admin.careers.index')->with('success', 'Career opportunity created successfully.');
@@ -53,10 +58,17 @@ class CareerController extends Controller
             'experience' => 'nullable|string|max:255',
             'summary' => 'nullable|string',
             'description' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
             'is_active' => 'boolean',
         ]);
 
         $validated['slug'] = $validated['slug'] ?? Str::slug($validated['title']);
+        if ($request->hasFile('image')) {
+            if ($career->image) {
+                Storage::disk('public')->delete($career->image);
+            }
+            $validated['image'] = $request->file('image')->store('careers', 'public');
+        }
         $career->update($validated);
 
         return redirect()->route('admin.careers.index')->with('success', 'Career opportunity updated successfully.');
@@ -64,6 +76,9 @@ class CareerController extends Controller
 
     public function destroy(Career $career)
     {
+        if ($career->image) {
+            Storage::disk('public')->delete($career->image);
+        }
         $career->delete();
         return redirect()->route('admin.careers.index')->with('success', 'Career opportunity deleted successfully.');
     }

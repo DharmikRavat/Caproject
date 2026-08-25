@@ -34,7 +34,9 @@ class PageController extends Controller
     public function about()
     {
         $teamMembers = TeamMember::where('is_active', true)->latest()->get();
-        return view('about', compact('teamMembers'));
+        $siteSettings = \App\Models\SiteSetting::pluck('value', 'key');
+
+        return view('about', compact('teamMembers', 'siteSettings'));
     }
 
     public function services()
@@ -63,8 +65,28 @@ class PageController extends Controller
 
     public function blogs()
     {
-        $blogs = Blog::where('is_published', true)->latest()->get();
-        return view('blogs', compact('blogs'));
+        $query = Blog::where('is_published', true);
+        if (request()->filled('search')) {
+            $search = request('search');
+            $query->where(function ($builder) use ($search) {
+                $builder->where('title', 'like', "%{$search}%")
+                    ->orWhere('excerpt', 'like', "%{$search}%")
+                    ->orWhere('content', 'like', "%{$search}%");
+            });
+        }
+        $blogs = $query->latest()->get();
+        $recentBlogs = Blog::where('is_published', true)->latest()->take(3)->get();
+        $categories = Blog::where('is_published', true)->whereNotNull('category')->select('category')->get()->countBy('category');
+        $tags = Blog::where('is_published', true)->pluck('tags')->flatMap(function ($value) {
+            return array_filter(array_map('trim', explode(',', (string) $value)));
+        })->countBy()->sortDesc()->take(12);
+        $archives = Blog::where('is_published', true)->get()->groupBy(function ($blog) {
+            return $blog->created_at->format('Y-m');
+        })->map(function ($monthBlogs, $month) {
+            return (object) ['month' => $month, 'total' => $monthBlogs->count()];
+        })->sortKeysDesc();
+
+        return view('blogs', compact('blogs', 'recentBlogs', 'categories', 'tags', 'archives'));
     }
 
     public function blog($slug)
@@ -76,7 +98,9 @@ class PageController extends Controller
     public function careers()
     {
         $careers = Career::where('is_active', true)->latest()->get();
-        return view('careers', compact('careers'));
+        $siteSettings = \App\Models\SiteSetting::pluck('value', 'key');
+
+        return view('careers', compact('careers', 'siteSettings'));
     }
 
     public function career($slug)
@@ -87,7 +111,10 @@ class PageController extends Controller
 
     public function contact()
     {
-        return view('contact');
+        $siteSettings = \App\Models\SiteSetting::pluck('value', 'key');
+        $contactServices = Service::where('is_active', true)->latest()->take(3)->get();
+
+        return view('contact', compact('siteSettings', 'contactServices'));
     }
 
     public function submitContact(Request $request)

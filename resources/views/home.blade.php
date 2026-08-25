@@ -7,13 +7,16 @@
          ========================= -->
     @php
         $heroBanner = $banners->first();
-        $heroImage = data_get($heroBanner, 'image') ? Storage::url(data_get($heroBanner, 'image')) : asset('images/hero-bg.jpg');
+        $heroImagePath = data_get($heroBanner, 'image');
+        $heroImage = $heroImagePath && \Illuminate\Support\Str::startsWith($heroImagePath, ['http://', 'https://'])
+            ? $heroImagePath
+            : ($heroImagePath ? Storage::url($heroImagePath) : asset('images/hero-bg.jpg'));
     @endphp
     <section class="relative w-full h-[500px] bg-gray-600 flex items-center justify-center bg-cover bg-center" style="background-image: url('{{ $heroImage }}'); background-blend-mode: overlay;">
         <div class="text-center text-white px-4">
-            <h1 class="text-4xl md:text-5xl font-bold mb-4 drop-shadow-lg">{{ data_get($heroBanner, 'title', 'SERVICE BEYOND TRUST') }}</h1>
-            <p class="text-lg md:text-xl mb-8 drop-shadow-md">{{ data_get($heroBanner, 'subtitle', 'Professional chartered accountancy support for growing businesses.') }}</p>
-            <a href="{{ data_get($heroBanner, 'link', route('about')) }}" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded transition duration-300">{{ data_get($heroBanner, 'button_text', 'About Us') }}</a>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 drop-shadow-lg">{{ data_get($heroBanner, 'title') ?: 'SERVICE BEYOND TRUST' }}</h1>
+            @if(data_get($heroBanner, 'subtitle'))<p class="text-lg md:text-xl mb-8 drop-shadow-md">{{ $heroBanner->subtitle }}</p>@endif
+            @if(data_get($heroBanner, 'button_text'))<a href="{{ data_get($heroBanner, 'link') ?: route('about') }}" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded transition duration-300">{{ $heroBanner->button_text }}</a>@endif
         </div>
     </section>
 

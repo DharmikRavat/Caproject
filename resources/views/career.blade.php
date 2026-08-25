@@ -4,6 +4,9 @@
 <div class="container py-5">
     <div class="row g-5">
         <div class="col-lg-8">
+            @if($career->image)
+                <img src="{{ Storage::url($career->image) }}" alt="{{ $career->title }}" class="img-fluid rounded shadow-sm mb-4" style="max-height: 380px; width: 100%; object-fit: cover;">
+            @endif
             <span class="badge badge-soft px-3 py-2 rounded-pill mb-3">Career opportunity</span>
             <h1 class="section-title display-6 fw-bold">{{ $career->title }}</h1>
             <div class="d-flex flex-wrap gap-2 mb-3">

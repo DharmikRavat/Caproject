@@ -24,6 +24,14 @@
                 <input type="text" name="author" class="form-control" value="{{ old('author', $blog->author ?? '') }}">
             </div>
             <div class="col-md-6">
+                <label class="form-label">Category</label>
+                <input type="text" name="category" class="form-control" value="{{ old('category', $blog->category ?? '') }}" placeholder="Income Tax, GST, Compliance">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Tags</label>
+                <input type="text" name="tags" class="form-control" value="{{ old('tags', $blog->tags ?? '') }}" placeholder="GST, Tax Planning, Audit">
+            </div>
+            <div class="col-md-6">
                 <label class="form-label">Featured image</label>
                 <input type="file" name="image" class="form-control" accept="image/jpeg,image/png,image/webp">
                 @if($blog->getAttribute('image'))<small class="text-muted d-block mt-1"><a href="{{ Storage::url($blog->getAttribute('image')) }}" target="_blank">View current image</a></small>@endif

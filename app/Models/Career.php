@@ -23,6 +23,7 @@ class Career extends Model
         'slug',
         'summary',
         'description',
+        'image',
         'location',
         'type',
         'experience',
