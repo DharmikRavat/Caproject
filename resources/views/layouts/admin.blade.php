@@ -114,92 +114,24 @@
         @media (max-width: 767px) { .intro-grid, .service-grid, .review-grid { grid-template-columns: 1fr; } .registration-grid { grid-template-columns: repeat(2, 1fr); }.formation-grid, .vertical-grid { grid-template-columns: repeat(2, 1fr); }.intro-grid { gap: 24px; }.intro-grid img { height: 210px; }.section-band { padding: 35px 0; } }
     </style>
 </head>
-<body>
-    <div class="top-bar">
-        <div class="container d-flex justify-content-between align-items-center">
-            <div>
-                <i class="fas fa-envelope me-2"></i> {{ $siteSettings['contact_email'] ?? '' }}
-                <span class="mx-3">|</span>
-                <i class="fas fa-phone-alt me-2"></i> {{ $siteSettings['contact_phone'] ?? '' }}
-            </div>
-            <div>
-                @if(!empty($siteSettings['facebook_link']))<a href="{{ $siteSettings['facebook_link'] }}" target="_blank" rel="noopener"><i class="fab fa-facebook-f"></i></a>@endif
-                @if(!empty($siteSettings['twitter_link']))<a href="{{ $siteSettings['twitter_link'] }}" target="_blank" rel="noopener"><i class="fab fa-twitter"></i></a>@endif
-                @if(!empty($siteSettings['linkedin_link']))<a href="{{ $siteSettings['linkedin_link'] }}" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>@endif
-            </div>
-        </div>
+<body class="admin-body">
+    <button class="admin-menu-toggle" type="button" data-admin-menu-toggle aria-label="Toggle admin navigation"><i class="fas fa-bars"></i></button>
+    <div class="admin-shell">
+        <aside class="admin-sidebar" data-admin-sidebar>
+            <a href="{{ route('admin.dashboard') }}" class="admin-brand"><span class="admin-brand-mark">CA</span><span><strong>JITESH TELHARA</strong><small>& ASSOCIATES LLP</small></span></a>
+            <div class="admin-user"><i class="fas fa-user-shield"></i><span>{{ auth()->user()->name ?? 'Administrator' }}<small>Administrator</small></span></div>
+            <nav class="admin-nav" aria-label="Admin navigation">
+                <p>Workspace</p><a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"><i class="fas fa-chart-line"></i>Dashboard</a>
+                <p>Website Content</p><a href="{{ route('admin.services.index') }}" class="{{ request()->routeIs('admin.services.*') ? 'active' : '' }}"><i class="fas fa-briefcase"></i>Services</a><a href="{{ route('admin.industries.index') }}" class="{{ request()->routeIs('admin.industries.*') ? 'active' : '' }}"><i class="fas fa-building"></i>Industries</a><a href="{{ route('admin.blogs.index') }}" class="{{ request()->routeIs('admin.blogs.*') ? 'active' : '' }}"><i class="fas fa-newspaper"></i>Blogs</a><a href="{{ route('admin.careers.index') }}" class="{{ request()->routeIs('admin.careers.*') ? 'active' : '' }}"><i class="fas fa-user-tie"></i>Careers</a><a href="{{ route('admin.team-members.index') }}" class="{{ request()->routeIs('admin.team-members.*') ? 'active' : '' }}"><i class="fas fa-users"></i>Team Members</a><a href="{{ route('admin.testimonials.index') }}" class="{{ request()->routeIs('admin.testimonials.*') ? 'active' : '' }}"><i class="fas fa-star"></i>Testimonials</a><a href="{{ route('admin.banners.index') }}" class="{{ request()->routeIs('admin.banners.*') ? 'active' : '' }}"><i class="fas fa-image"></i>Banners</a><a href="{{ route('admin.links.edit') }}" class="{{ request()->routeIs('admin.links.*') ? 'active' : '' }}"><i class="fas fa-link"></i>Important Links</a>
+                <p>Operations</p><a href="{{ route('admin.contact-enquiries.index') }}" class="{{ request()->routeIs('admin.contact-enquiries.*') ? 'active' : '' }}"><i class="fas fa-envelope"></i>Enquiries</a><a href="{{ route('admin.job-applications.index') }}" class="{{ request()->routeIs('admin.job-applications.*') ? 'active' : '' }}"><i class="fas fa-file-alt"></i>Job Applications</a><a href="{{ route('admin.site-settings.index') }}" class="{{ request()->routeIs('admin.site-settings.*') ? 'active' : '' }}"><i class="fas fa-cog"></i>Site Settings</a>
+            </nav>
+            <div class="admin-sidebar-bottom"><a href="{{ route('home') }}"><i class="fas fa-globe"></i>View website</a><form method="POST" action="{{ route('logout') }}">@csrf<button type="submit"><i class="fas fa-sign-out-alt"></i>Logout</button></form></div>
+        </aside>
+        <div class="admin-main"><header class="admin-topbar"><div><span class="admin-page-kicker">ADMINISTRATION</span><strong>Content management workspace</strong></div><span class="admin-status"><i class="fas fa-circle"></i> System online</span></header><main>@yield('content')</main></div>
     </div>
-
-    <nav class="navbar navbar-expand-lg sticky-top">
-        <div class="container">
-            <a class="navbar-brand" href="{{ route('home') }}">
-                <span style="color: #17345d;">JITESH TELSARA</span><small class="d-block" style="color: #09b85b; font-size: .55rem; letter-spacing: .4px;">& ASSOCIATES LLP | Chartered Accountants</small>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="mainNav">
-                <ul class="navbar-nav mx-auto align-items-lg-center">
-                    <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('services') }}">Registration</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('about') }}">About Us</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('services') }}">RERA</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('careers') }}">Career</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('blogs') }}">Blog</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('contact') }}">Contact Us</a></li>
-                </ul>
-                <ul class="navbar-nav">
-                    @auth
-                        <li class="nav-item"><a class="btn btn-sm btn-darkblue" href="{{ route('admin.dashboard') }}">Admin Panel</a></li>
-                    @else
-                        <li class="nav-item"><a class="btn btn-sm btn-darkblue" href="{{ route('login') }}">Login</a></li>
-                    @endauth
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <main>
-        @yield('content')
-    </main>
-
-    <footer class="footer">
-        <div class="container">
-            <div class="row g-4">
-                <div class="col-md-3">
-                    <h4 class="fw-bold mb-3">Jitesh Telsara & Associates LLP</h4>
-                    <p class="small">We provide professional chartered accountancy expertise for businesses, individuals, and growing organizations.</p>
-                </div>
-                <div class="col-md-3">
-                    <h6>Services</h6>
-                    <ul class="list-unstyled">
-                        @foreach($footerServices as $footerService)
-                            <li><a href="{{ route('service.show', $footerService->slug) }}">{{ $footerService->title }}</a></li>
-                        @endforeach
-                    </ul>
-                </div>
-                <div class="col-md-3">
-                    <h6>Quick Links</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="{{ route('home') }}">Home</a></li>
-                        <li><a href="{{ route('about') }}">About Us</a></li>
-                        <li><a href="{{ route('blogs') }}">Blogs</a></li>
-                        <li><a href="{{ route('careers') }}">Careers</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-3">
-                    <h6>Reach Us</h6>
-                    <ul class="list-unstyled small">
-                        <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i> {{ $siteSettings['contact_address'] ?? '' }}</li>
-                        <li class="mb-2"><i class="fas fa-phone-alt me-2"></i> {{ $siteSettings['contact_phone'] ?? '' }}</li>
-                        <li class="mb-2"><i class="fas fa-envelope me-2"></i> {{ $siteSettings['contact_email'] ?? '' }}</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="text-center mt-5 pt-3 border-top border-secondary small text-muted">
-                &copy; {{ date('Y') }} Jitesh Telhara & Associates LLP. All Rights Reserved.
-            </div>
-        </div>
-    </footer>
+    <style>
+        .admin-body{background:#f5f7fa;color:#263238}.admin-shell{display:flex;min-height:100vh}.admin-sidebar{background:#102a43;color:#dbe7f0;display:flex;flex-direction:column;flex:0 0 260px;min-height:100vh;padding:25px 15px;position:sticky;top:0}.admin-brand{align-items:center;color:#fff;display:flex;gap:10px;margin:0 10px 28px;text-decoration:none}.admin-brand-mark{align-items:center;border:2px solid #09b85b;color:#09b85b;display:grid;font-weight:800;height:40px;place-items:center;width:40px}.admin-brand strong{display:block;font-size:13px;letter-spacing:.3px}.admin-brand small{color:#09b85b;display:block;font-size:9px;font-weight:700;margin-top:3px}.admin-user{align-items:center;background:#173c5d;border:1px solid #285477;border-radius:7px;display:flex;font-size:13px;gap:11px;margin:0 5px 23px;padding:12px}.admin-user>i{color:#37d879;font-size:18px}.admin-user small{color:#9db3c5;display:block;font-size:10px;margin-top:2px}.admin-nav{flex:1}.admin-nav p{color:#7f9bb0;font-size:10px;font-weight:700;letter-spacing:1.1px;margin:20px 10px 7px;text-transform:uppercase}.admin-nav a,.admin-sidebar-bottom a,.admin-sidebar-bottom button{align-items:center;background:transparent;border:0;border-radius:6px;color:#c5d5e0;display:flex;font-size:13px;gap:12px;margin:2px 0;padding:11px 12px;text-align:left;text-decoration:none;width:100%}.admin-nav a i,.admin-sidebar-bottom i{color:#8eabba;width:17px}.admin-nav a:hover,.admin-nav a.active{background:#09a954;color:#fff}.admin-nav a:hover i,.admin-nav a.active i{color:#fff}.admin-sidebar-bottom{border-top:1px solid #2a4961;padding-top:14px}.admin-sidebar-bottom form{margin:0}.admin-sidebar-bottom button{cursor:pointer}.admin-sidebar-bottom a:hover,.admin-sidebar-bottom button:hover{color:#fff}.admin-main{flex:1;min-width:0}.admin-topbar{align-items:center;background:#fff;border-bottom:1px solid #e4e9ed;display:flex;justify-content:space-between;padding:18px 38px}.admin-page-kicker{color:#09a954;display:block;font-size:10px;font-weight:800;letter-spacing:1.5px}.admin-topbar strong{color:#17345d;font-size:15px}.admin-status{color:#657782;font-size:11px}.admin-status i{color:#09b85b;font-size:8px;margin-right:5px}.admin-menu-toggle{display:none}@media(max-width:900px){.admin-sidebar{flex-basis:225px}.admin-topbar{padding:16px 22px}}@media(max-width:700px){.admin-sidebar{bottom:0;left:-270px;position:fixed;transition:left .2s;z-index:20}.admin-sidebar.open{left:0}.admin-main{width:100%}.admin-menu-toggle{background:#102a43;border:0;border-radius:5px;color:#fff;display:block;font-size:18px;padding:8px 11px;position:fixed;right:15px;top:12px;z-index:30}.admin-topbar{padding-right:65px}.admin-status{display:none}}
+    </style>
+    <script>document.querySelector('[data-admin-menu-toggle]').addEventListener('click',function(){document.querySelector('[data-admin-sidebar]').classList.toggle('open')});</script>
 </body>
 </html>

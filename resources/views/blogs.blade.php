@@ -21,7 +21,7 @@
 <main class="mx-auto max-w-7xl px-5 py-14 lg:px-10">
     <div class="grid gap-12 lg:grid-cols-[1fr_280px]">
         <section>
-            <div class="mb-7 flex items-end justify-between border-b border-slate-200 pb-4"><div><p class="mb-2 text-xs font-bold uppercase tracking-[.18em] text-emerald-600">From our desk</p><h2 class="text-3xl font-bold text-slate-900">Latest Blogs</h2></div><span class="text-sm text-slate-500">{{ $blogs->count() }} articles</span></div>
+                <div class="mb-7 flex items-end justify-between border-b border-slate-200 pb-4"><div><p class="mb-2 text-xs font-bold uppercase tracking-[.18em] text-emerald-600">From our desk</p><h2 class="text-3xl font-bold text-slate-900">Latest Blogs</h2></div><span class="text-sm text-slate-500">{{ $blogs->total() }} articles</span></div>
             <div class="space-y-12">
                 @forelse($blogs as $blog)
                     <article class="border-b border-slate-200 pb-10">
@@ -33,6 +33,7 @@
                     <p class="text-slate-600">More insights will be published soon.</p>
                 @endforelse
             </div>
+            @if($blogs->hasPages())<div class="mt-8">{{ $blogs->links() }}</div>@endif
         </section>
         <aside>
             <div class="space-y-10">

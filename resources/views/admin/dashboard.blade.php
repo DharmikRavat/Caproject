@@ -36,6 +36,9 @@
         <div class="col-md-3">
             <a href="{{ route('admin.site-settings.index') }}" class="btn btn-outline-primary w-100">Global Site Settings</a>
         </div>
+        <div class="col-md-3">
+            <a href="{{ route('admin.links.edit') }}" class="btn btn-outline-primary w-100">Manage Important Links</a>
+        </div>
     </div>
 
     <h4 class="mb-3">Statistics</h4>

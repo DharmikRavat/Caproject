@@ -74,7 +74,7 @@ class PageController extends Controller
                     ->orWhere('content', 'like', "%{$search}%");
             });
         }
-        $blogs = $query->latest()->get();
+        $blogs = $query->latest()->paginate(5)->appends(request()->query());
         $recentBlogs = Blog::where('is_published', true)->latest()->take(3)->get();
         $categories = Blog::where('is_published', true)->whereNotNull('category')->select('category')->get()->countBy('category');
         $tags = Blog::where('is_published', true)->pluck('tags')->flatMap(function ($value) {

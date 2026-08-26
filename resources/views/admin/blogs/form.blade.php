@@ -34,7 +34,15 @@
             <div class="col-md-6">
                 <label class="form-label">Featured image</label>
                 <input type="file" name="image" class="form-control" accept="image/jpeg,image/png,image/webp">
-                @if($blog->getAttribute('image'))<small class="text-muted d-block mt-1"><a href="{{ Storage::url($blog->getAttribute('image')) }}" target="_blank">View current image</a></small>@endif
+                @if($blog->getAttribute('image'))
+                    @php($currentImage = $blog->getAttribute('image'))
+                    <small class="text-muted d-block mt-1"><a href="{{ \Illuminate\Support\Str::startsWith($currentImage, ['http://', 'https://']) ? $currentImage : Storage::url($currentImage) }}" target="_blank">View current image</a></small>
+                @endif
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Featured image URL</label>
+                <input type="url" name="image_url" class="form-control" value="{{ old('image_url', \Illuminate\Support\Str::startsWith($blog->getAttribute('image'), ['http://', 'https://']) ? $blog->getAttribute('image') : '') }}" placeholder="https://example.com/blog-image.jpg">
+                <small class="text-muted">Use this instead of uploading a file.</small>
             </div>
             <div class="col-md-6">
                 <label class="form-label">Published</label>

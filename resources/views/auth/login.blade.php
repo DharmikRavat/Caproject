@@ -47,7 +47,10 @@
                             <a href="{{ route('password.request') }}" class="text-xs font-semibold text-emerald-700 hover:text-emerald-800">{{ __('Forgot password?') }}</a>
                         @endif
                     </div>
-                    <input id="password" type="password" name="password" required autocomplete="current-password" class="block w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 outline-none transition focus:border-emerald-600 focus:ring-4 focus:ring-emerald-600/10">
+                    <div class="relative">
+                        <input id="password" type="password" name="password" required autocomplete="current-password" class="block w-full rounded-lg border border-slate-300 px-4 py-3 pr-12 text-slate-900 outline-none transition focus:border-emerald-600 focus:ring-4 focus:ring-emerald-600/10">
+                        <button type="button" data-password-toggle="password" aria-label="Show password" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-600"><i class="fas fa-eye"></i></button>
+                    </div>
                     @error('password')
                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -67,4 +70,15 @@
         </div>
     </div>
 </div>
+<script>
+    document.querySelectorAll('[data-password-toggle]').forEach(function (button) {
+        button.addEventListener('click', function () {
+            const input = document.getElementById(button.dataset.passwordToggle);
+            const isVisible = input.type === 'text';
+            input.type = isVisible ? 'password' : 'text';
+            button.setAttribute('aria-label', isVisible ? 'Show password' : 'Hide password');
+            button.innerHTML = `<i class="fas fa-eye${isVisible ? '' : '-slash'}"></i>`;
+        });
+    });
+</script>
 @endsection

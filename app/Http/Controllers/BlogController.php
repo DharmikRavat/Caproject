@@ -29,6 +29,7 @@ class BlogController extends Controller
             'excerpt' => 'nullable|string',
             'content' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
+            'image_url' => 'nullable|url|max:2000',
             'category' => 'nullable|string|max:100',
             'tags' => 'nullable|string|max:500',
             'is_published' => 'boolean',
@@ -37,7 +38,10 @@ class BlogController extends Controller
         $validated['slug'] = $validated['slug'] ?? Str::slug($validated['title']);
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('blogs', 'public');
+        } elseif (!empty($validated['image_url'])) {
+            $validated['image'] = $validated['image_url'];
         }
+        unset($validated['image_url']);
         Blog::create($validated);
 
         return redirect()->route('admin.blogs.index')->with('success', 'Blog created successfully.');
@@ -62,6 +66,7 @@ class BlogController extends Controller
             'excerpt' => 'nullable|string',
             'content' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
+            'image_url' => 'nullable|url|max:2000',
             'category' => 'nullable|string|max:100',
             'tags' => 'nullable|string|max:500',
             'is_published' => 'boolean',
@@ -73,7 +78,10 @@ class BlogController extends Controller
                 Storage::disk('public')->delete($blog->getAttribute('image'));
             }
             $validated['image'] = $request->file('image')->store('blogs', 'public');
+        } elseif (!empty($validated['image_url'])) {
+            $validated['image'] = $validated['image_url'];
         }
+        unset($validated['image_url']);
         $blog->update($validated);
 
         return redirect()->route('admin.blogs.index')->with('success', 'Blog updated successfully.');

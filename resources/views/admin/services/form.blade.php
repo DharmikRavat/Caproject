@@ -21,7 +21,13 @@
             </div>
             <div class="col-md-4">
                 <label class="form-label">Category</label>
-                <input type="text" name="category" class="form-control" value="{{ old('category', $service->category ?? '') }}" placeholder="e.g. Direct Tax" required>
+                <select name="category" class="form-select" required>
+                    <option value="">Select a service category</option>
+                    @foreach($serviceCategories as $categoryKey => $categoryLabel)
+                        <option value="{{ $categoryKey }}" @selected(old('category', $service->category ?? '') === $categoryKey)>{{ $categoryLabel }}</option>
+                    @endforeach
+                    <option value="custom" @selected(old('category', $service->category ?? '') === 'custom')>Custom category</option>
+                </select>
                 <small class="text-muted">This category becomes a Services menu group on the website.</small>
             </div>
             <div class="col-md-4">

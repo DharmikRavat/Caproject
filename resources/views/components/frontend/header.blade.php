@@ -1,79 +1,118 @@
-<header class="relative z-50 bg-white shadow-[0_2px_12px_rgba(15,23,42,0.08)]" x-data="{ mobileOpen: false, servicesOpen: false, mobileCategory: null }">
-    <nav class="mx-auto flex min-h-[108px] max-w-7xl items-center justify-between gap-8 px-5 py-5 lg:px-10">
-        <a href="{{ route('home') }}" class="shrink-0 leading-tight text-blue-950" aria-label="Jitesh Telhara and Associates LLP home">
-            <span class="block text-lg font-extrabold tracking-tight sm:text-xl">JITESH TELHARA &amp; ASSOCIATES LLP</span>
-            <span class="mt-1 block text-xs font-bold text-emerald-600 sm:text-sm">Chartered Accountants</span>
-        </a>
-
-        <button type="button" class="grid h-11 w-11 place-items-center rounded-lg border border-slate-200 text-xl text-blue-950 lg:hidden" @click="mobileOpen = !mobileOpen" :aria-expanded="mobileOpen.toString()" aria-controls="mobile-navigation" aria-label="Toggle menu">
-            <i class="fas" :class="mobileOpen ? 'fa-times' : 'fa-bars'"></i>
-        </button>
-
-        <div class="hidden items-center lg:flex">
-            <ul class="flex items-center gap-7 text-[17px] font-semibold text-slate-700 xl:gap-9">
-                <li><a href="{{ route('home') }}" class="transition hover:text-emerald-600 {{ request()->routeIs('home') ? 'text-emerald-600' : '' }}">HOME</a></li>
-                <li class="group relative">
-                    <button type="button" class="flex items-center gap-2 py-10 transition group-hover:text-emerald-600 {{ request()->routeIs('services', 'service.show') ? 'text-emerald-600' : '' }}" aria-haspopup="true">
-                        SERVICES <i class="fas fa-chevron-down text-xs"></i>
-                    </button>
-                    <div class="invisible absolute left-1/2 top-full flex -translate-x-1/2 pt-0 opacity-0 transition duration-150 group-hover:visible group-hover:opacity-100">
-                        <div class="w-[313px] overflow-visible bg-[#1D293B] shadow-xl">
-                            @forelse($headerServices as $category => $categoryServices)
-                                <div class="group/category relative border-b border-slate-600 last:border-0">
-                                    <a href="{{ route('services') }}?category={{ urlencode($category) }}" class="flex min-h-[58px] items-center justify-between px-[18px] text-[17px] text-white transition hover:bg-slate-700">
-                                        <span>{{ \Illuminate\Support\Str::headline($category) }}</span>
-                                        <i class="fas fa-chevron-right text-xs text-slate-300"></i>
-                                    </a>
-                                    <div class="invisible absolute left-full top-0 w-[313px] opacity-0 transition duration-150 group-hover/category:visible group-hover/category:opacity-100">
-                                        <div class="overflow-hidden bg-[#1D293B] shadow-xl">
-                                            @foreach($categoryServices as $headerService)
-                                                <a href="{{ route('service.show', $headerService->slug) }}" class="block min-h-[58px] border-b border-slate-600 px-[18px] py-4 text-[16px] text-white transition last:border-0 hover:bg-slate-700">{{ $headerService->title }}</a>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </div>
-                            @empty
-                                <a href="{{ route('services') }}" class="block px-[18px] py-4 text-[16px] text-white">View services</a>
-                            @endforelse
-                        </div>
-                    </div>
-                </li>
-                <li><a href="{{ route('about') }}" class="transition hover:text-emerald-600 {{ request()->routeIs('about') ? 'text-emerald-600' : '' }}">ABOUT US</a></li>
-                <li><a href="{{ route('blogs') }}" class="transition hover:text-emerald-600 {{ request()->routeIs('blogs', 'blog.show') ? 'text-emerald-600' : '' }}">BLOGS</a></li>
-                <li><a href="{{ route('careers') }}" class="transition hover:text-emerald-600 {{ request()->routeIs('careers', 'career.show') ? 'text-emerald-600' : '' }}">CAREERS</a></li>
-                <li><a href="{{ route('services') }}" class="transition hover:text-emerald-600">LINKS</a></li>
-                <li><a href="{{ route('contact') }}" class="transition hover:text-emerald-600 {{ request()->routeIs('contact') ? 'text-emerald-600' : '' }}">CONTACT US</a></li>
-            </ul>
+<header x-data="{ mobileOpen: false, servicesOpen: false, activeCat: null }">
+    <!-- Top Navy Bar -->
+    <div class="navy-bg text-white text-[11px] py-2 px-6">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex flex-wrap items-center gap-6">
+                <a href="mailto:{{ $siteSettings['contact_email'] ?? 'cajiteshtellsara@gmail.com' }}" class="flex items-center gap-1.5 hover:text-green-300 transition">
+                    <i class="fa-solid fa-envelope text-theme-green"></i> 
+                    <span>{{ $siteSettings['contact_email'] ?? 'cajiteshtellsara@gmail.com' }}</span>
+                </a>
+                <a href="tel:{{ $siteSettings['contact_phone'] ?? '+917875037800' }}" class="flex items-center gap-1.5 hover:text-green-300 transition">
+                    <i class="fa-solid fa-phone text-theme-green"></i> 
+                    <span>{{ $siteSettings['contact_phone'] ?? '+91-7875037800' }}</span>
+                </a>
+            </div>
+            <div class="hidden sm:flex items-center space-x-3 text-[10px] text-gray-300">
+                <span>Office: Mon - Sat (9:30 AM - 6:30 PM)</span>
+            </div>
         </div>
-    </nav>
+    </div>
+    
+    <!-- Main Sticky Navbar -->
+    <nav class="bg-white shadow-sm border-b sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <!-- Brand Logo -->
+            <a href="{{ route('home') }}" class="flex items-center space-x-3 group">
+                <div class="border-2 border-blue-900 text-blue-900 font-extrabold px-2 py-0.5 rounded text-xl font-serif tracking-tighter group-hover:bg-blue-900 group-hover:text-white transition">
+                    CA
+                </div>
+                <div class="leading-tight">
+                    <div class="font-bold text-blue-900 text-[13px] tracking-wide uppercase">JITESH TELLSARA &amp; ASSOCIATES LLP</div>
+                    <div class="text-[11px] text-theme-green font-bold uppercase tracking-wider">Chartered Accountants</div>
+                </div>
+            </a>
 
-    <div id="mobile-navigation" x-show="mobileOpen" x-cloak class="border-t border-slate-100 bg-white px-5 py-4 lg:hidden">
-        <ul class="space-y-1 text-base font-semibold text-slate-700">
-            <li><a href="{{ route('home') }}" class="block rounded px-3 py-3 hover:bg-slate-50 hover:text-emerald-600">HOME</a></li>
-            <li>
-                <button type="button" class="flex w-full items-center justify-between rounded px-3 py-3 hover:bg-slate-50 hover:text-emerald-600" @click="servicesOpen = !servicesOpen" :aria-expanded="servicesOpen.toString()">
-                    SERVICES <i class="fas text-xs" :class="servicesOpen ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+            <!-- Desktop Nav Items -->
+            <div class="hidden md:flex space-x-6 text-[11px] font-bold uppercase text-gray-700 items-center">
+                <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-theme-green font-extrabold border-b-2 border-theme-green pb-1' : 'hover:text-green-600 transition' }}">Home</a>
+                
+                <!-- Services Multi-Level Dropdown -->
+                <div class="relative group" @mouseenter="servicesOpen = true" @mouseleave="servicesOpen = false; activeCat = null">
+                    <a href="{{ route('services') }}" class="hover:text-green-600 transition flex items-center gap-1 py-1 {{ request()->routeIs('services', 'service.show') ? 'text-theme-green border-b-2 border-theme-green' : '' }}">
+                        Services <i class="fa-solid fa-caret-down text-[10px]"></i>
+                    </a>
+                    
+                    <!-- Main Dropdown Box -->
+                    <div x-show="servicesOpen" x-transition.opacity.duration.150ms class="absolute top-full left-0 w-72 bg-[#1a3251] shadow-2xl rounded-b-md py-2 z-50 text-white text-[12px] font-medium uppercase">
+                        @foreach($headerServices as $categoryKey => $catServices)
+                            <div class="relative group/sub" @mouseenter="activeCat = '{{ $categoryKey }}'">
+                                <a href="{{ route('services') }}?category={{ urlencode($categoryKey) }}" class="flex items-center justify-between px-4 py-2.5 hover:bg-[#1f375d] hover:text-green-400 transition border-b border-gray-700/40 last:border-0">
+                                    <span class="truncate">{{ $serviceCategories[$categoryKey] ?? \Illuminate\Support\Str::headline($categoryKey) }}</span>
+                                    <i class="fa-solid fa-chevron-right text-[9px] text-gray-400"></i>
+                                </a>
+
+                                <!-- Sub-menu Flyout for Individual Services -->
+                                <div x-show="activeCat === '{{ $categoryKey }}'" x-transition.opacity.duration.100ms class="absolute left-full top-0 w-80 bg-[#15273e] shadow-2xl rounded-md py-2 text-[11px] font-normal border border-gray-700/60 max-h-[420px] overflow-y-auto z-50">
+                                    <div class="px-4 py-1.5 font-bold text-[10px] text-green-400 tracking-wider border-b border-gray-700/60 mb-1">
+                                        {{ $serviceCategories[$categoryKey] ?? \Illuminate\Support\Str::headline($categoryKey) }}
+                                    </div>
+                                    @foreach($catServices as $srv)
+                                        <a href="{{ route('service.show', $srv->slug) }}" class="block px-4 py-1.5 text-gray-200 hover:bg-[#1f375d] hover:text-green-300 transition truncate capitalize">
+                                            {{ $srv->title }}
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+
+                <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'text-theme-green font-extrabold border-b-2 border-theme-green pb-1' : 'hover:text-green-600 transition' }}">About Us</a>
+                <a href="{{ route('blogs') }}" class="{{ request()->routeIs('blogs', 'blog.show') ? 'text-theme-green font-extrabold border-b-2 border-theme-green pb-1' : 'hover:text-green-600 transition' }}">Blogs</a>
+                <a href="{{ route('careers') }}" class="{{ request()->routeIs('careers', 'career.show') ? 'text-theme-green font-extrabold border-b-2 border-theme-green pb-1' : 'hover:text-green-600 transition' }}">Career</a>
+                <a href="{{ route('links') }}" class="{{ request()->routeIs('links') ? 'text-theme-green font-extrabold border-b-2 border-theme-green pb-1' : 'hover:text-green-600 transition' }}">Links</a>
+                <a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') ? 'text-theme-green font-extrabold border-b-2 border-theme-green pb-1' : 'hover:text-green-600 transition' }}">Contact Us</a>
+            </div>
+
+            <!-- Mobile Hamburger Button -->
+            <button @click="mobileOpen = !mobileOpen" class="md:hidden text-gray-700 hover:text-blue-900 focus:outline-none p-2">
+                <i class="fa-solid" :class="mobileOpen ? 'fa-xmark text-2xl' : 'fa-bars text-xl'"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div x-show="mobileOpen" x-cloak class="md:hidden bg-white border-t px-6 py-4 space-y-3 text-xs font-bold uppercase text-gray-700 shadow-lg">
+            <a href="{{ route('home') }}" class="block py-2 {{ request()->routeIs('home') ? 'text-theme-green' : 'hover:text-green-600' }}">Home</a>
+            
+            <div x-data="{ mServicesOpen: false }">
+                <button @click="mServicesOpen = !mServicesOpen" class="w-full flex items-center justify-between py-2 {{ request()->routeIs('services', 'service.show') ? 'text-theme-green' : 'hover:text-green-600' }}">
+                    <span>Services</span>
+                    <i class="fa-solid text-[10px]" :class="mServicesOpen ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
                 </button>
-                <div x-show="servicesOpen" x-cloak class="ml-3 border-l-2 border-emerald-100 pl-3">
-                    @foreach($headerServices as $category => $categoryServices)
-                        <div class="border-b border-slate-100 last:border-0">
-                            <button type="button" class="flex w-full items-center justify-between py-3 text-left text-slate-700" @click="mobileCategory = mobileCategory === '{{ $category }}' ? null : '{{ $category }}'">
-                                {{ \Illuminate\Support\Str::headline($category) }} <i class="fas text-xs" :class="mobileCategory === '{{ $category }}' ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                <div x-show="mServicesOpen" x-cloak class="pl-3 border-l-2 border-green-500 space-y-2 py-2">
+                    @foreach($headerServices as $categoryKey => $catServices)
+                        <div x-data="{ subOpen: false }">
+                            <button @click="subOpen = !subOpen" class="w-full flex items-center justify-between py-1 text-[11px] text-gray-600 hover:text-green-600">
+                                <span>{{ $serviceCategories[$categoryKey] ?? \Illuminate\Support\Str::headline($categoryKey) }}</span>
+                                <i class="fa-solid text-[8px]" :class="subOpen ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
                             </button>
-                            <div x-show="mobileCategory === '{{ $category }}'" x-cloak class="pb-2 pl-3">
-                                @foreach($categoryServices as $headerService)
-                                    <a href="{{ route('service.show', $headerService->slug) }}" class="block py-2 text-sm font-medium text-slate-500 hover:text-emerald-600">{{ $headerService->title }}</a>
+                            <div x-show="subOpen" x-cloak class="pl-2 space-y-1 py-1">
+                                @foreach($catServices as $srv)
+                                    <a href="{{ route('service.show', $srv->slug) }}" class="block py-1 text-[10px] text-gray-500 hover:text-green-600 font-normal">
+                                        {{ $srv->title }}
+                                    </a>
                                 @endforeach
                             </div>
                         </div>
                     @endforeach
                 </div>
-            </li>
-            <li><a href="{{ route('about') }}" class="block rounded px-3 py-3 hover:bg-slate-50 hover:text-emerald-600">ABOUT US</a></li>
-            <li><a href="{{ route('blogs') }}" class="block rounded px-3 py-3 hover:bg-slate-50 hover:text-emerald-600">BLOGS</a></li>
-            <li><a href="{{ route('careers') }}" class="block rounded px-3 py-3 hover:bg-slate-50 hover:text-emerald-600">CAREERS</a></li>
-            <li><a href="{{ route('services') }}" class="block rounded px-3 py-3 hover:bg-slate-50 hover:text-emerald-600">LINKS</a></li>
-            <li><a href="{{ route('contact') }}" class="block rounded px-3 py-3 hover:bg-slate-50 hover:text-emerald-600">CONTACT US</a></li>
-        </ul>
-    </div>
+            </div>
+
+            <a href="{{ route('about') }}" class="block py-2 {{ request()->routeIs('about') ? 'text-theme-green' : 'hover:text-green-600' }}">About Us</a>
+            <a href="{{ route('blogs') }}" class="block py-2 {{ request()->routeIs('blogs') ? 'text-theme-green' : 'hover:text-green-600' }}">Blogs</a>
+            <a href="{{ route('careers') }}" class="block py-2 {{ request()->routeIs('careers') ? 'text-theme-green' : 'hover:text-green-600' }}">Career</a>
+            <a href="{{ route('links') }}" class="block py-2 {{ request()->routeIs('links') ? 'text-theme-green' : 'hover:text-green-600' }}">Links</a>
+            <a href="{{ route('contact') }}" class="block py-2 {{ request()->routeIs('contact') ? 'text-theme-green' : 'hover:text-green-600' }}">Contact Us</a>
+        </div>
+    </nav>
 </header>

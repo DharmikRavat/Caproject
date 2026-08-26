@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin User',
             'email' => 'admin@cafirm.com',
             'password' => Hash::make('password123'),
+            'is_admin' => true,
         ]);
 
         Service::create([
@@ -156,5 +157,48 @@ class DatabaseSeeder extends Seeder
         SiteSetting::create(['key' => 'about_us_text', 'value' => 'Apex CA is a leading firm of Chartered Accountants in Pune. We provide a comprehensive range of professional services, including Audit and Assurance, Direct and Indirect Taxation, Corporate Advisory, Accounting, and Business Outsourcing. Our team of dedicated professionals is committed to delivering quality services with a focus on client satisfaction.']);
         SiteSetting::create(['key' => 'contact_email', 'value' => 'info@apexca.in']);
         SiteSetting::create(['key' => 'contact_phone', 'value' => '+91 98765 43210']);
+
+        SiteSetting::create(['key' => 'links_title', 'value' => 'Links']);
+        SiteSetting::create(['key' => 'links_intro', 'value' => 'Explore useful government, professional, financial, news, and market resources.']);
+        SiteSetting::create(['key' => 'links_footer', 'value' => 'Jitesh Tellsara & Associates LLP is a professionally managed Chartered Accountant firm in Pune providing taxation, regulatory, audit, and advisory services to domestic and international clients.']);
+
+        foreach ([
+            ['gov', 'RBI', 'https://www.rbi.org.in/'],
+            ['gov', 'Mahavat', 'https://www.mahagst.gov.in/'],
+            ['gov', 'Income Tax Department, India', 'https://www.incometax.gov.in/'],
+            ['gov', 'e-Filing of your Income Tax Return', 'https://www.incometax.gov.in/iec/foportal/'],
+            ['gov', 'Ministry of Corporate Affairs', 'https://www.mca.gov.in/'],
+            ['gov', 'ITAT Online', 'https://itat.gov.in/'],
+            ['gov', 'Central Board Of Excise and Customs', 'https://www.cbic.gov.in/'],
+            ['gov', 'GST', 'https://www.gst.gov.in/'],
+            ['gov', 'Directorate General of Foreign Trade', 'https://www.dgft.gov.in/'],
+            ['gov', 'Maharera', 'https://maharera.mahaonline.gov.in/'],
+            ['gov', 'Registration of Firm - ROF', 'https://rof.mahaonline.gov.in/'],
+            ['gov', 'MSME', 'https://msme.gov.in/'],
+            ['gov', 'Udyam Registration', 'https://udyamregistration.gov.in/'],
+            ['gov', 'Mahagst', 'https://www.mahagst.gov.in/'],
+            ['ca', 'ICAI', 'https://www.icai.org/'],
+            ['ca', 'PUNE ICAI', 'https://puneicai.org/'],
+            ['ca', 'UDIN', 'https://udin.icai.org/'],
+            ['financial', 'HDFC Bank', 'https://www.hdfcbank.com/'],
+            ['financial', 'ICICI Bank', 'https://www.icicibank.com/'],
+            ['financial', 'State Bank Of India', 'https://sbi.co.in/'],
+            ['financial', 'Indian Overseas Bank', 'https://www.iob.in/'],
+            ['financial', 'Punjab National Bank', 'https://www.pnbindia.in/'],
+            ['financial', 'IndusInd Bank', 'https://www.indusind.com/'],
+            ['financial', 'Bank of India', 'https://bankofindia.co.in/'],
+            ['financial', 'Bank of Maharashtra', 'https://bankofmaharashtra.in/'],
+            ['financial', 'Canara Bank', 'https://canarabank.com/'],
+            ['financial', 'Union Bank Of India', 'https://www.unionbankofindia.co.in/'],
+            ['news', 'Times of India', 'https://timesofindia.indiatimes.com/'],
+            ['news', 'Indian Express', 'https://indianexpress.com/'],
+            ['news', 'Hindustan Times', 'https://www.hindustantimes.com/'],
+            ['news', 'Economic Times', 'https://economictimes.indiatimes.com/'],
+            ['finance', 'Bombay Stock Exchange', 'https://www.bseindia.com/'],
+            ['finance', 'National Stock Exchange', 'https://www.nseindia.com/'],
+            ['finance', 'Moneycontrol', 'https://www.moneycontrol.com/'],
+        ] as $order => [$category, $title, $url]) {
+            \App\Models\Link::create(compact('category', 'title', 'url') + ['sort_order' => $order, 'is_active' => true]);
+        }
     }
 }
