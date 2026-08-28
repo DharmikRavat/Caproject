@@ -20,8 +20,17 @@ class Blog extends Model
         'content',
         'image',
         'author',
-        'category',
-        'tags',
+        'blog_category_id',
         'is_published',
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(BlogCategory::class, 'blog_category_id');
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(BlogTag::class);
+    }
 }

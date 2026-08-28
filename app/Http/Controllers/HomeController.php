@@ -22,10 +22,7 @@ class HomeController extends Controller
     public function index()
     {
         $stats = [
-            'services' => Service::count(),
-            'testimonials' => \App\Models\Testimonial::count(),
             'blogs' => Blog::count(),
-            'industries' => Industry::count(),
             'careers' => Career::count(),
             'team_members' => TeamMember::count(),
             'banners' => Banner::count(),

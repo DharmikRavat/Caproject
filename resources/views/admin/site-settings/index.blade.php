@@ -27,6 +27,14 @@
                 <label class="form-label">Office Address</label>
                 <input type="text" name="contact_address" class="form-control" value="{{ old('contact_address', $settings['contact_address'] ?? '') }}">
             </div>
+            <div class="col-md-6">
+                <label class="form-label">Header Office Timing</label>
+                <input type="text" name="header_office_timing" class="form-control" value="{{ old('header_office_timing', $settings['header_office_timing'] ?? '') }}" placeholder="e.g. Office: Mon - Sat (9:30 AM - 6:30 PM)">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Footer Copyright Text</label>
+                <input type="text" name="footer_copyright_text" class="form-control" value="{{ old('footer_copyright_text', $settings['footer_copyright_text'] ?? '') }}" placeholder="e.g. Copyrights © 2026 All rights reserved to...">
+            </div>
         </div>
 
         <h5 class="mb-3 border-bottom pb-2">Homepage "About Us" Section</h5>

@@ -16,7 +16,7 @@
             </div>
             <p class="lead text-muted">{{ $career->summary }}</p>
             <div class="text-muted">
-                {!! nl2br(e($career->description)) !!}
+                {!! $career->description !!}
             </div>
         </div>
         <div class="col-lg-4">

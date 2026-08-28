@@ -37,7 +37,7 @@
             </div>
             <div class="col-12">
                 <label class="form-label">Description</label>
-                <textarea name="description" class="form-control" rows="6" required>{{ old('description', $career->description ?? '') }}</textarea>
+                <textarea id="rich-description" name="description" class="form-control" rows="12">{{ old('description', $career->description ?? '') }}</textarea>
             </div>
             <div class="col-md-6">
                 <label class="form-label">Career Image</label>
@@ -58,4 +58,17 @@
         </div>
     </form>
 </div>
+
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        tinymce.init({
+            selector: '#rich-description',
+            plugins: 'advlist autolink lists link image charmap preview anchor pagebreak searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking table emoticons template help',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+            menubar: false,
+            height: 400
+        });
+    });
+</script>
 @endsection

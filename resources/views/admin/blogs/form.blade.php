@@ -25,11 +25,21 @@
             </div>
             <div class="col-md-6">
                 <label class="form-label">Category</label>
-                <input type="text" name="category" class="form-control" value="{{ old('category', $blog->category ?? '') }}" placeholder="Income Tax, GST, Compliance">
+                <select name="blog_category_id" class="form-select">
+                    <option value="">Select Category</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}" {{ old('blog_category_id', $blog->blog_category_id ?? '') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                    @endforeach
+                </select>
             </div>
             <div class="col-md-6">
                 <label class="form-label">Tags</label>
-                <input type="text" name="tags" class="form-control" value="{{ old('tags', $blog->tags ?? '') }}" placeholder="GST, Tax Planning, Audit">
+                <select name="tags[]" class="form-select" multiple size="4">
+                    @foreach($tags as $tag)
+                        <option value="{{ $tag->id }}" {{ in_array($tag->id, old('tags', isset($blog->id) ? $blog->tags->pluck('id')->toArray() : [])) ? 'selected' : '' }}>{{ $tag->name }}</option>
+                    @endforeach
+                </select>
+                <small class="text-muted">Hold Ctrl/Cmd to select multiple tags.</small>
             </div>
             <div class="col-md-6">
                 <label class="form-label">Featured image</label>

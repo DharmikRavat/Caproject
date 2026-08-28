@@ -6,9 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/about', [PageController::class, 'about'])->name('about');
-Route::get('/services', [PageController::class, 'services'])->name('services');
-Route::get('/services/{slug}', [PageController::class, 'service'])->name('service.show');
-Route::get('/industries', [PageController::class, 'industries'])->name('industries');
+Route::get('/blogs', [PageController::class, 'blogs'])->name('blogs');
 Route::get('/blogs', [PageController::class, 'blogs'])->name('blogs');
 Route::get('/blogs/{slug}', [PageController::class, 'blog'])->name('blog.show');
 Route::get('/careers', [PageController::class, 'careers'])->name('careers');
@@ -22,13 +20,14 @@ Auth::routes();
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
-    Route::resource('services', App\Http\Controllers\ServiceController::class);
+    Route::resource('topics', App\Http\Controllers\Admin\TopicController::class);
+    Route::resource('topic-posts', App\Http\Controllers\Admin\TopicPostController::class);
+    Route::resource('blog-categories', App\Http\Controllers\Admin\BlogCategoryController::class);
+    Route::resource('blog-tags', App\Http\Controllers\Admin\BlogTagController::class);
     Route::resource('blogs', App\Http\Controllers\BlogController::class);
-    Route::resource('industries', App\Http\Controllers\IndustryController::class);
     Route::resource('careers', App\Http\Controllers\CareerController::class);
     Route::resource('team-members', App\Http\Controllers\TeamMemberController::class);
     Route::resource('banners', App\Http\Controllers\BannerController::class);
-    Route::resource('testimonials', App\Http\Controllers\TestimonialController::class);
     Route::get('site-settings', [App\Http\Controllers\SiteSettingController::class, 'index'])->name('site-settings.index');
     Route::post('site-settings', [App\Http\Controllers\SiteSettingController::class, 'update'])->name('site-settings.update');
     Route::get('links', [LinkController::class, 'edit'])->name('links.edit');
@@ -38,3 +37,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('job-applications', [App\Http\Controllers\JobApplicationController::class, 'index'])->name('job-applications.index');
     Route::patch('job-applications/{jobApplication}/status', [App\Http\Controllers\JobApplicationController::class, 'updateStatus'])->name('job-applications.status');
 });
+
+Route::get('/topic-post/{slug}', [PageController::class, 'topicPost'])->name('topic.post.show');
+Route::get('/{slug}', [PageController::class, 'topic'])->name('topic.show');

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SiteSetting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class SiteSettingController extends Controller
@@ -20,6 +21,8 @@ class SiteSettingController extends Controller
             'contact_email' => 'nullable|email|max:255',
             'contact_phone' => 'nullable|string|max:255',
             'contact_address' => 'nullable|string|max:255',
+            'header_office_timing' => 'nullable|string|max:255',
+            'footer_copyright_text' => 'nullable|string|max:500',
             'about_us_text' => 'nullable|string',
             'about_us_image' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:4096',
             'about_page_title' => 'required|string|max:255',
@@ -64,6 +67,8 @@ class SiteSettingController extends Controller
                 );
             }
         }
+
+        Cache::forget('site_settings');
 
         return redirect()->back()->with('success', 'Site settings updated successfully.');
     }

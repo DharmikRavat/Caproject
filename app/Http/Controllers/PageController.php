@@ -18,54 +18,25 @@ class PageController extends Controller
     public function home()
     {
         $banners = Banner::where('is_active', true)->latest()->get();
-        $caServices = Service::where('is_active', true)->where('category', 'ca_services')->latest()->get();
-        $businessRegistration = Service::where('is_active', true)->where('category', 'business_registration')->latest()->get();
-        $companyFormation = Service::where('is_active', true)->where('category', 'company_formation')->latest()->get();
-        $groupedServices = Service::where('is_active', true)->latest()->get()->groupBy('category');
-        $industries = Industry::where('is_active', true)->latest()->take(4)->get();
-        $testimonials = \App\Models\Testimonial::where('is_active', true)->latest()->get();
-        $siteSettings = \App\Models\SiteSetting::pluck('value', 'key');
         $blogs = Blog::where('is_published', true)->latest()->take(3)->get();
         $teamMembers = TeamMember::where('is_active', true)->latest()->take(4)->get();
 
-        return view('home', compact('banners', 'caServices', 'businessRegistration', 'companyFormation', 'groupedServices', 'industries', 'blogs', 'teamMembers', 'testimonials', 'siteSettings'));
+        return view('home', compact('banners', 'blogs', 'teamMembers'));
     }
 
     public function about()
     {
         $teamMembers = TeamMember::where('is_active', true)->latest()->get();
-        $siteSettings = \App\Models\SiteSetting::pluck('value', 'key');
 
-        return view('about', compact('teamMembers', 'siteSettings'));
+        return view('about', compact('teamMembers'));
     }
 
-    public function services()
-    {
-        $servicesQuery = Service::where('is_active', true);
 
-        if (request()->filled('category')) {
-            $servicesQuery->where('category', request()->query('category'));
-        }
-
-        $services = $servicesQuery->latest()->get();
-        return view('services', compact('services'));
-    }
-
-    public function service($slug)
-    {
-        $service = Service::where('slug', $slug)->where('is_active', true)->firstOrFail();
-        return view('service', compact('service'));
-    }
-
-    public function industries()
-    {
-        $industries = Industry::where('is_active', true)->latest()->get();
-        return view('industries', compact('industries'));
-    }
 
     public function blogs()
     {
-        $query = Blog::where('is_published', true);
+        $query = Blog::with(['category', 'tags'])->where('is_published', true);
+        
         if (request()->filled('search')) {
             $search = request('search');
             $query->where(function ($builder) use ($search) {
@@ -74,33 +45,52 @@ class PageController extends Controller
                     ->orWhere('content', 'like', "%{$search}%");
             });
         }
+
+        if (request()->filled('category')) {
+            $categorySlug = request('category');
+            $query->whereHas('category', function ($q) use ($categorySlug) {
+                $q->where('slug', $categorySlug);
+            });
+        }
+
+        if (request()->filled('tag')) {
+            $tagSlug = request('tag');
+            $query->whereHas('tags', function ($q) use ($tagSlug) {
+                $q->where('slug', $tagSlug);
+            });
+        }
+
+        if (request()->filled('month')) {
+            $month = request('month');
+            $query->whereRaw("DATE_FORMAT(created_at, '%Y-%m') = ?", [$month]);
+        }
+
         $blogs = $query->latest()->paginate(5)->appends(request()->query());
         $recentBlogs = Blog::where('is_published', true)->latest()->take(3)->get();
-        $categories = Blog::where('is_published', true)->whereNotNull('category')->select('category')->get()->countBy('category');
-        $tags = Blog::where('is_published', true)->pluck('tags')->flatMap(function ($value) {
-            return array_filter(array_map('trim', explode(',', (string) $value)));
-        })->countBy()->sortDesc()->take(12);
-        $archives = Blog::where('is_published', true)->get()->groupBy(function ($blog) {
-            return $blog->created_at->format('Y-m');
-        })->map(function ($monthBlogs, $month) {
-            return (object) ['month' => $month, 'total' => $monthBlogs->count()];
-        })->sortKeysDesc();
+        
+        $categories = \App\Models\BlogCategory::withCount('blogs')->orderBy('name')->get();
+        $tags = \App\Models\BlogTag::withCount('blogs')->orderBy('name')->get();
+        
+        $archives = Blog::where('is_published', true)
+            ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as month, count(*) as total")
+            ->groupBy('month')
+            ->orderBy('month', 'desc')
+            ->get();
 
         return view('blogs', compact('blogs', 'recentBlogs', 'categories', 'tags', 'archives'));
     }
 
     public function blog($slug)
     {
-        $blog = Blog::where('slug', $slug)->where('is_published', true)->firstOrFail();
+        $blog = Blog::with(['category', 'tags'])->where('slug', $slug)->where('is_published', true)->firstOrFail();
         return view('blog', compact('blog'));
     }
 
     public function careers()
     {
         $careers = Career::where('is_active', true)->latest()->get();
-        $siteSettings = \App\Models\SiteSetting::pluck('value', 'key');
 
-        return view('careers', compact('careers', 'siteSettings'));
+        return view('careers', compact('careers'));
     }
 
     public function career($slug)
@@ -111,10 +101,7 @@ class PageController extends Controller
 
     public function contact()
     {
-        $siteSettings = \App\Models\SiteSetting::pluck('value', 'key');
-        $contactServices = Service::where('is_active', true)->latest()->take(3)->get();
-
-        return view('contact', compact('siteSettings', 'contactServices'));
+        return view('contact');
     }
 
     public function submitContact(Request $request)
@@ -157,5 +144,19 @@ class PageController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Your application has been submitted successfully.');
+    }
+
+    public function topic($slug)
+    {
+        $topic = \App\Models\Topic::where('slug', $slug)->firstOrFail();
+        $posts = $topic->posts()->where('is_published', true)->latest('published_date')->paginate(12);
+        
+        return view('topic', compact('topic', 'posts'));
+    }
+
+    public function topicPost($slug)
+    {
+        $post = \App\Models\TopicPost::with('topic')->where('slug', $slug)->where('is_published', true)->firstOrFail();
+        return view('topic-post', compact('post'));
     }
 }

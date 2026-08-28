@@ -62,28 +62,16 @@
 
     <!-- Footer -->
     <footer class="navy-bg text-gray-300 text-xs pt-12 pb-6 px-6 mt-10">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 pb-8 border-b border-gray-600">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-gray-600">
             <div>
                 <h5 class="font-bold text-white uppercase mb-4 tracking-wider flex items-center gap-2">
                     About <span class="w-6 h-0.5 bg-gray-500 inline-block"></span>
                 </h5>
                 <p class="text-[11px] text-gray-400 leading-relaxed pr-4 text-justify">
-                    {{ $siteSettings['about_us_text'] ?? 'Jitesh Tellsara & Associates LLP is a CA in Pune, professionally managed firm catering to domestic and international clients with a wide range of services in domestic and international taxation, regulatory and advisory services.' }}
+                    {{ $siteSettings['about_us_text'] ?? '' }}
                 </p>
             </div>
-            <div>
-                <h5 class="font-bold text-white uppercase mb-4 tracking-wider flex items-center gap-2">
-                    Services <span class="w-6 h-0.5 bg-gray-500 inline-block"></span>
-                </h5>
-                <ul class="space-y-2 text-gray-400 text-[11px]">
-                    <li><a href="{{ route('services') }}?category=business_registration" class="hover:text-white transition flex items-center"><i class="fa-solid fa-caret-right mr-1.5 text-[9px] text-gray-500"></i> Business Registration</a></li>
-                    <li><a href="{{ route('services') }}?category=company_formation" class="hover:text-white transition flex items-center"><i class="fa-solid fa-caret-right mr-1.5 text-[9px] text-gray-500"></i> Company Formation</a></li>
-                    <li><a href="{{ route('services') }}?category=audit_assurance" class="hover:text-white transition flex items-center"><i class="fa-solid fa-caret-right mr-1.5 text-[9px] text-gray-500"></i> Audit & Assurance</a></li>
-                    <li><a href="{{ route('services') }}?category=direct_tax" class="hover:text-white transition flex items-center"><i class="fa-solid fa-caret-right mr-1.5 text-[9px] text-gray-500"></i> Direct Tax</a></li>
-                    <li><a href="{{ route('services') }}?category=corporate_laws" class="hover:text-white transition flex items-center"><i class="fa-solid fa-caret-right mr-1.5 text-[9px] text-gray-500"></i> Corporate Laws</a></li>
-                    <li><a href="{{ route('services') }}?category=consultancy" class="hover:text-white transition flex items-center"><i class="fa-solid fa-caret-right mr-1.5 text-[9px] text-gray-500"></i> Consultancy</a></li>
-                </ul>
-            </div>
+
             <div>
                 <h5 class="font-bold text-white uppercase mb-4 tracking-wider flex items-center gap-2">
                     Quick Links <span class="w-6 h-0.5 bg-gray-500 inline-block"></span>
@@ -103,21 +91,21 @@
                 <div class="space-y-3 text-gray-400 text-[11px]">
                     <p class="flex items-start gap-2.5">
                         <i class="fa-solid fa-location-dot text-theme-green mt-1 text-xs shrink-0"></i> 
-                        <span>{{ $siteSettings['contact_address'] ?? 'Office No. 10, Ganga Trueno Business Park, New Airport Road, Viman Nagar, Pune-411014' }}</span>
+                        <span>{{ $siteSettings['contact_address'] ?? '' }}</span>
                     </p>
                     <p class="flex items-center gap-2.5">
                         <i class="fa-solid fa-phone text-theme-green text-xs shrink-0"></i> 
-                        <a href="tel:{{ $siteSettings['contact_phone'] ?? '+917875037800' }}" class="hover:text-white transition">{{ $siteSettings['contact_phone'] ?? '+91-7875037800' }}</a>
+                        <a href="tel:{{ $siteSettings['contact_phone'] ?? '' }}" class="hover:text-white transition">{{ $siteSettings['contact_phone'] ?? '' }}</a>
                     </p>
                     <p class="flex items-center gap-2.5">
                         <i class="fa-solid fa-envelope text-theme-green text-xs shrink-0"></i> 
-                        <a href="mailto:{{ $siteSettings['contact_email'] ?? 'cajiteshtellsara@gmail.com' }}" class="hover:text-white transition">{{ $siteSettings['contact_email'] ?? 'cajiteshtellsara@gmail.com' }}</a>
+                        <a href="mailto:{{ $siteSettings['contact_email'] ?? '' }}" class="hover:text-white transition">{{ $siteSettings['contact_email'] ?? '' }}</a>
                     </p>
                 </div>
             </div>
         </div>
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 mt-4 text-[10px] text-gray-400">
-            <span>Copyrights © {{ date('Y') }} All rights reserved to Jitesh Tellsara & Associates LLP</span>
+            <span>{{ $siteSettings['footer_copyright_text'] ?? '' }}</span>
             <a href="{{ route('contact') }}" class="bg-white text-blue-900 px-3.5 py-1.5 rounded-full font-bold shadow-md flex items-center gap-2 hover:bg-gray-100 transition">
                 <span>Get In Touch</span> 
                 <span class="bg-[#5c7ebb] text-white rounded-full w-5 h-5 flex items-center justify-center"><i class="fa-solid fa-comment-dots text-[9px]"></i></span>

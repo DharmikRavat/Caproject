@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
+use App\Models\BlogCategory;
+use App\Models\BlogTag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -17,7 +19,9 @@ class BlogController extends Controller
 
     public function create()
     {
-        return view('admin.blogs.form', ['blog' => new Blog(), 'route' => route('admin.blogs.store')]);
+        $categories = BlogCategory::all();
+        $tags = BlogTag::all();
+        return view('admin.blogs.form', ['blog' => new Blog(), 'route' => route('admin.blogs.store'), 'categories' => $categories, 'tags' => $tags]);
     }
 
     public function store(Request $request)
@@ -30,8 +34,9 @@ class BlogController extends Controller
             'content' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
             'image_url' => 'nullable|url|max:2000',
-            'category' => 'nullable|string|max:100',
-            'tags' => 'nullable|string|max:500',
+            'blog_category_id' => 'nullable|exists:blog_categories,id',
+            'tags' => 'nullable|array',
+            'tags.*' => 'exists:blog_tags,id',
             'is_published' => 'boolean',
         ]);
 
@@ -42,7 +47,12 @@ class BlogController extends Controller
             $validated['image'] = $validated['image_url'];
         }
         unset($validated['image_url']);
-        Blog::create($validated);
+        
+        $tags = $validated['tags'] ?? [];
+        unset($validated['tags']);
+        
+        $blog = Blog::create($validated);
+        $blog->tags()->sync($tags);
 
         return redirect()->route('admin.blogs.index')->with('success', 'Blog created successfully.');
     }
@@ -54,7 +64,9 @@ class BlogController extends Controller
 
     public function edit(Blog $blog)
     {
-        return view('admin.blogs.form', ['blog' => $blog, 'route' => route('admin.blogs.update', $blog)]);
+        $categories = BlogCategory::all();
+        $tags = BlogTag::all();
+        return view('admin.blogs.form', ['blog' => $blog, 'route' => route('admin.blogs.update', $blog), 'categories' => $categories, 'tags' => $tags]);
     }
 
     public function update(Request $request, Blog $blog)
@@ -67,8 +79,9 @@ class BlogController extends Controller
             'content' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
             'image_url' => 'nullable|url|max:2000',
-            'category' => 'nullable|string|max:100',
-            'tags' => 'nullable|string|max:500',
+            'blog_category_id' => 'nullable|exists:blog_categories,id',
+            'tags' => 'nullable|array',
+            'tags.*' => 'exists:blog_tags,id',
             'is_published' => 'boolean',
         ]);
 
@@ -82,7 +95,12 @@ class BlogController extends Controller
             $validated['image'] = $validated['image_url'];
         }
         unset($validated['image_url']);
+        
+        $tags = $validated['tags'] ?? [];
+        unset($validated['tags']);
+        
         $blog->update($validated);
+        $blog->tags()->sync($tags);
 
         return redirect()->route('admin.blogs.index')->with('success', 'Blog updated successfully.');
     }
