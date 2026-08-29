@@ -22,6 +22,13 @@ class Blog extends Model
         'author',
         'blog_category_id',
         'is_published',
+        'published_date',
+        'sort_order',
+        'is_featured',
+        'meta_title',
+        'meta_description',
+        'meta_keywords',
+        'og_image',
     ];
 
     public function category()

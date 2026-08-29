@@ -18,11 +18,17 @@ class SiteSettingController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
+            'site_name' => 'nullable|string|max:255',
+            'site_tagline' => 'nullable|string|max:255',
+            'site_logo' => 'nullable|image|mimes:jpeg,png,jpg,svg,webp|max:4096',
+            'contact_page_hero_image' => 'nullable|image|mimes:jpeg,png,jpg,svg,webp|max:4096',
+            'links_page_hero_image' => 'nullable|image|mimes:jpeg,png,jpg,svg,webp|max:4096',
             'contact_email' => 'nullable|email|max:255',
             'contact_phone' => 'nullable|string|max:255',
             'contact_address' => 'nullable|string|max:255',
             'header_office_timing' => 'nullable|string|max:255',
             'footer_copyright_text' => 'nullable|string|max:500',
+            'footer_about_text' => 'nullable|string',
             'about_us_text' => 'nullable|string',
             'about_us_image' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:4096',
             'about_page_title' => 'required|string|max:255',
@@ -51,7 +57,7 @@ class SiteSettingController extends Controller
         ]);
 
         foreach ($validated as $key => $value) {
-            if (in_array($key, ['about_us_image', 'about_page_hero_image', 'about_page_vision_image', 'careers_page_image'], true) && $request->hasFile($key)) {
+            if (in_array($key, ['site_logo', 'about_us_image', 'about_page_hero_image', 'about_page_vision_image', 'careers_page_image', 'contact_page_hero_image', 'links_page_hero_image'], true) && $request->hasFile($key)) {
                 $setting = SiteSetting::firstOrNew(['key' => $key]);
                 if ($setting->value) {
                     Storage::disk('public')->delete($setting->value);
@@ -60,7 +66,7 @@ class SiteSettingController extends Controller
                 $setting->save();
             } else if ($key === 'about_page_why_points') {
                 SiteSetting::updateOrCreate(['key' => $key], ['value' => json_encode($value)]);
-            } else if (!in_array($key, ['about_us_image', 'about_page_hero_image', 'about_page_vision_image', 'careers_page_image'], true)) {
+            } else if (!in_array($key, ['site_logo', 'about_us_image', 'about_page_hero_image', 'about_page_vision_image', 'careers_page_image', 'contact_page_hero_image', 'links_page_hero_image'], true)) {
                 SiteSetting::updateOrCreate(
                     ['key' => $key],
                     ['value' => $value]

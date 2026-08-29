@@ -15,6 +15,10 @@ class Testimonial extends Model
         'author_image',
         'rating',
         'content',
+        'source',
+        'review_date',
+        'is_verified',
+        'sort_order',
         'is_active',
     ];
 }

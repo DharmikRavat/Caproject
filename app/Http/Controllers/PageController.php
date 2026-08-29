@@ -20,8 +20,26 @@ class PageController extends Controller
         $banners = Banner::where('is_active', true)->latest()->get();
         $blogs = Blog::where('is_published', true)->latest()->take(3)->get();
         $teamMembers = TeamMember::where('is_active', true)->latest()->take(4)->get();
+        $serviceCategories = \App\Models\ServiceCategory::with(['services' => function($q) { $q->where('status', true); }])->whereNull('parent_id')->where('status', true)->orderBy('sort_order')->get();
 
-        return view('home', compact('banners', 'blogs', 'teamMembers'));
+        $businessRegistrationCategory = \App\Models\ServiceCategory::where('slug', 'business-registration')->first();
+        $businessRegistrationServices = $businessRegistrationCategory 
+            ? $businessRegistrationCategory->services()->where('status', true)->orderBy('sort_order')->get() 
+            : collect();
+            
+        $companyFormationCategory = \App\Models\ServiceCategory::where('slug', 'company-formation')->first();
+        $companyFormationServices = $companyFormationCategory 
+            ? $companyFormationCategory->services()->where('status', true)->orderBy('sort_order')->get() 
+            : collect();
+
+        $industries = \App\Models\Industry::where('is_active', true)->orderBy('name')->get();
+
+        $testimonials = \App\Models\Testimonial::where('is_active', true)->orderBy('sort_order')->get();
+        $averageRating = $testimonials->avg('rating') ?? 5;
+        $averageRating = number_format($averageRating, 1);
+        $totalReviews = $testimonials->count();
+
+        return view('home', compact('banners', 'blogs', 'teamMembers', 'serviceCategories', 'businessRegistrationServices', 'companyFormationServices', 'industries', 'testimonials', 'averageRating', 'totalReviews'));
     }
 
     public function about()
@@ -65,7 +83,7 @@ class PageController extends Controller
             $query->whereRaw("DATE_FORMAT(created_at, '%Y-%m') = ?", [$month]);
         }
 
-        $blogs = $query->latest()->paginate(5)->appends(request()->query());
+        $blogs = $query->latest()->paginate(3)->appends(request()->query());
         $recentBlogs = Blog::where('is_published', true)->latest()->take(3)->get();
         
         $categories = \App\Models\BlogCategory::withCount('blogs')->orderBy('name')->get();
@@ -80,10 +98,51 @@ class PageController extends Controller
         return view('blogs', compact('blogs', 'recentBlogs', 'categories', 'tags', 'archives'));
     }
 
+    public function blogCategory($slug)
+    {
+        $category = \App\Models\BlogCategory::where('slug', $slug)->firstOrFail();
+        
+        $query = Blog::where('blog_category_id', $category->id)->where('is_published', true);
+
+        if (request()->filled('search')) {
+            $search = request('search');
+            $query->where(function ($builder) use ($search) {
+                $builder->where('title', 'like', "%{$search}%")
+                    ->orWhere('excerpt', 'like', "%{$search}%")
+                    ->orWhere('content', 'like', "%{$search}%");
+            });
+        }
+
+        $blogs = $query->orderBy('sort_order')->orderBy('published_date', 'desc')->paginate(9)->appends(request()->query());
+        $recentBlogs = Blog::where('is_published', true)->orderBy('published_date', 'desc')->take(3)->get();
+        
+        return view('blog-category', compact('category', 'blogs', 'recentBlogs'));
+    }
+
     public function blog($slug)
     {
         $blog = Blog::with(['category', 'tags'])->where('slug', $slug)->where('is_published', true)->firstOrFail();
-        return view('blog', compact('blog'));
+        
+        $relatedBlogs = collect();
+        if ($blog->category) {
+            $relatedBlogs = Blog::where('blog_category_id', $blog->blog_category_id)
+                                ->where('is_published', true)
+                                ->where('id', '!=', $blog->id)
+                                ->orderBy('published_date', 'desc')
+                                ->take(3)
+                                ->get();
+        }
+        
+        $recentBlogs = Blog::where('is_published', true)->latest()->take(3)->get();
+        $categories = \App\Models\BlogCategory::withCount('blogs')->orderBy('name')->get();
+        $tags = \App\Models\BlogTag::withCount('blogs')->orderBy('name')->get();
+        $archives = Blog::where('is_published', true)
+            ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as month, count(*) as total")
+            ->groupBy('month')
+            ->orderBy('month', 'desc')
+            ->get();
+        
+        return view('blog', compact('blog', 'relatedBlogs', 'recentBlogs', 'categories', 'tags', 'archives'));
     }
 
     public function careers()

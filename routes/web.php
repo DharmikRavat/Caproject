@@ -8,6 +8,7 @@ Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/blogs', [PageController::class, 'blogs'])->name('blogs');
 Route::get('/blogs', [PageController::class, 'blogs'])->name('blogs');
+Route::get('/category/{slug}', [PageController::class, 'blogCategory'])->name('blog.category');
 Route::get('/blogs/{slug}', [PageController::class, 'blog'])->name('blog.show');
 Route::get('/careers', [PageController::class, 'careers'])->name('careers');
 Route::get('/careers/{slug}', [PageController::class, 'career'])->name('career.show');
@@ -28,6 +29,16 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('careers', App\Http\Controllers\CareerController::class);
     Route::resource('team-members', App\Http\Controllers\TeamMemberController::class);
     Route::resource('banners', App\Http\Controllers\BannerController::class);
+    Route::resource('service-categories', App\Http\Controllers\Admin\ServiceCategoryController::class);
+    Route::resource('services', App\Http\Controllers\Admin\ServiceController::class);
+    Route::resource('industries', App\Http\Controllers\Admin\IndustryController::class);
+    Route::resource('testimonials', App\Http\Controllers\Admin\TestimonialController::class);
+    Route::get('services/{service}/content', [App\Http\Controllers\Admin\ServiceController::class, 'content'])->name('services.content');
+    
+    Route::resource('service-sections', App\Http\Controllers\Admin\ServiceSectionController::class)->except(['index', 'show']);
+    Route::resource('service-faqs', App\Http\Controllers\Admin\ServiceFaqController::class)->except(['index', 'show']);
+    Route::resource('service-documents', App\Http\Controllers\Admin\ServiceDocumentController::class)->except(['index', 'show']);
+    Route::resource('service-process-steps', App\Http\Controllers\Admin\ServiceProcessStepController::class)->except(['index', 'show']);
     Route::get('site-settings', [App\Http\Controllers\SiteSettingController::class, 'index'])->name('site-settings.index');
     Route::post('site-settings', [App\Http\Controllers\SiteSettingController::class, 'update'])->name('site-settings.update');
     Route::get('links', [LinkController::class, 'edit'])->name('links.edit');
@@ -39,4 +50,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 });
 
 Route::get('/topic-post/{slug}', [PageController::class, 'topicPost'])->name('topic.post.show');
+
+Route::get('/services', [App\Http\Controllers\ServicesPortalController::class, 'index'])->name('services.index');
+Route::get('/services/{category_slug}', [App\Http\Controllers\ServicesPortalController::class, 'category'])->name('services.category');
+Route::get('/services/{category_slug}/{service_slug}', [App\Http\Controllers\ServicesPortalController::class, 'show'])->name('services.show');
+
 Route::get('/{slug}', [PageController::class, 'topic'])->name('topic.show');

@@ -25,6 +25,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        \Illuminate\Pagination\Paginator::useBootstrapFive();
+
         $serviceCategories = [
             'business_registration' => 'Business Registration',
             'company_formation' => 'Company Formation',
@@ -35,10 +37,22 @@ class AppServiceProvider extends ServiceProvider
             'nri_tax_allied_services' => 'NRI Tax & Allied Services',
         ];
 
-        view()->composer(['layouts.app', 'layouts.admin', 'components.frontend.header'], function ($view) {
+        view()->composer('*', function ($view) {
             $view->with('siteSettings', \Illuminate\Support\Facades\Cache::rememberForever('site_settings', function() {
                 return SiteSetting::pluck('value', 'key');
             }));
+        });
+
+        // Pass global categories and their services to the header for the Mega Menu
+        view()->composer('components.frontend.header', function ($view) {
+            $globalServiceCategories = \App\Models\ServiceCategory::with(['services' => function($q) {
+                $q->where('status', true)->orderBy('sort_order');
+            }])->whereNull('parent_id')
+               ->where('status', true)
+               ->orderBy('sort_order')
+               ->get();
+
+            $view->with('globalServiceCategories', $globalServiceCategories);
         });
     }
 }

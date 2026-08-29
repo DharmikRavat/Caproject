@@ -13,6 +13,24 @@
     <form action="{{ route('admin.site-settings.update') }}" method="POST" enctype="multipart/form-data" class="card border-0 shadow-sm p-4">
         @csrf
         
+        <h5 class="mb-3 border-bottom pb-2">General Settings</h5>
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <label class="form-label">Site Name (Brand)</label>
+                <input type="text" name="site_name" class="form-control" value="{{ old('site_name', $settings['site_name'] ?? 'Jitesh Telisara & Associates LLP') }}">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Site Tagline</label>
+                <input type="text" name="site_tagline" class="form-control" value="{{ old('site_tagline', $settings['site_tagline'] ?? 'Chartered Accountants') }}">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Site Logo (Header)</label>
+                <input type="file" name="site_logo" class="form-control" accept="image/*">
+                @if(isset($settings['site_logo']) && $settings['site_logo'])
+                    <small class="text-muted d-block mt-2">Current Logo: <br> <img src="{{ Storage::url($settings['site_logo']) }}" alt="preview" style="max-height: 50px; border-radius: 4px; margin-top: 5px; background: #f8f9fa; padding: 5px;"></small>
+                @endif
+            </div>
+        </div>
         <h5 class="mb-3 border-bottom pb-2">Contact Information (Header & Footer)</h5>
         <div class="row g-3 mb-4">
             <div class="col-md-4">
@@ -31,9 +49,6 @@
                 <label class="form-label">Header Office Timing</label>
                 <input type="text" name="header_office_timing" class="form-control" value="{{ old('header_office_timing', $settings['header_office_timing'] ?? '') }}" placeholder="e.g. Office: Mon - Sat (9:30 AM - 6:30 PM)">
             </div>
-            <div class="col-md-6">
-                <label class="form-label">Footer Copyright Text</label>
-                <input type="text" name="footer_copyright_text" class="form-control" value="{{ old('footer_copyright_text', $settings['footer_copyright_text'] ?? '') }}" placeholder="e.g. Copyrights © 2026 All rights reserved to...">
             </div>
         </div>
 
@@ -56,21 +71,18 @@
         @include('components.admin.careers-page-settings')
         @include('components.admin.contact-page-settings')
         
-        <h5 class="mb-3 border-bottom pb-2">Social Links</h5>
+        <h5 class="mb-3 border-bottom pb-2">Links Page</h5>
         <div class="row g-3 mb-4">
-            <div class="col-md-4">
-                <label class="form-label">Facebook URL</label>
-                <input type="url" name="facebook_link" class="form-control" value="{{ old('facebook_link', $settings['facebook_link'] ?? '') }}">
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">Twitter URL</label>
-                <input type="url" name="twitter_link" class="form-control" value="{{ old('twitter_link', $settings['twitter_link'] ?? '') }}">
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">LinkedIn URL</label>
-                <input type="url" name="linkedin_link" class="form-control" value="{{ old('linkedin_link', $settings['linkedin_link'] ?? '') }}">
+            <div class="col-md-12">
+                <label class="form-label">Links Page Hero Image</label>
+                <input type="file" name="links_page_hero_image" class="form-control" accept="image/*">
+                @if(isset($settings['links_page_hero_image']) && $settings['links_page_hero_image'])
+                    <small class="text-muted d-block mt-2">Current Hero Image: <br> <img src="{{ Storage::url($settings['links_page_hero_image']) }}" alt="preview" style="max-height: 80px; border-radius: 4px; margin-top: 5px;"></small>
+                @endif
             </div>
         </div>
+        
+        @include('components.admin.footer-settings')
 
         <div class="mt-2">
             <button type="submit" class="btn btn-primary-custom px-4 py-2 fw-bold">Save All Settings</button>

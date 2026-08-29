@@ -4,7 +4,7 @@
 <div class="relative isolate overflow-hidden bg-slate-50">
     <div class="mx-auto grid min-h-[620px] max-w-7xl items-center gap-12 px-6 py-16 lg:grid-cols-[1fr_460px] lg:px-12">
         <div class="hidden lg:block">
-            <p class="mb-4 text-sm font-bold uppercase tracking-[0.25em] text-emerald-600">Jitesh Telhara & Associates LLP</p>
+            <p class="mb-4 text-sm font-bold uppercase tracking-[0.25em] text-emerald-600">{{ \App\Models\SiteSetting::where('key', 'site_name')->value('value') ?? 'Jitesh Telisara & Associates LLP' }}</p>
             <h1 class="max-w-xl text-5xl font-extrabold leading-tight text-blue-950">Welcome back to your admin workspace.</h1>
             <p class="mt-6 max-w-lg text-lg leading-8 text-slate-600">Manage services, articles, enquiries, careers, and the rest of your firm website from one secure dashboard.</p>
             <div class="mt-10 flex items-center gap-3 text-sm font-semibold text-blue-950">

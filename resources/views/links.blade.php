@@ -60,7 +60,7 @@
 <style>
     /* --- Hero Section --- */
     .links-hero {
-        background: linear-gradient(rgba(36, 53, 77, 0.7), rgba(36, 53, 77, 0.7)), url('https://via.placeholder.com/1500x300/1a2b42/ffffff?text=Background+Pattern') center/cover;
+        background: linear-gradient(rgba(36, 53, 77, 0.7), rgba(36, 53, 77, 0.7)), url('{{ isset($siteSettings["links_page_hero_image"]) && $siteSettings["links_page_hero_image"] ? Storage::url($siteSettings["links_page_hero_image"]) : "https://via.placeholder.com/1500x300/1a2b42/ffffff?text=Background+Pattern" }}') center/cover;
         color: #ffffff;
         padding: 60px 5%;
         text-align: left;

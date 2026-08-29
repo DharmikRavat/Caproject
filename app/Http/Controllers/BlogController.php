@@ -38,15 +38,33 @@ class BlogController extends Controller
             'tags' => 'nullable|array',
             'tags.*' => 'exists:blog_tags,id',
             'is_published' => 'boolean',
+            'published_date' => 'nullable|date',
+            'sort_order' => 'integer',
+            'is_featured' => 'boolean',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string',
+            'meta_keywords' => 'nullable|string',
+            'og_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         $validated['slug'] = $validated['slug'] ?? Str::slug($validated['title']);
+        $validated['is_published'] = $request->has('is_published');
+        $validated['is_featured'] = $request->has('is_featured');
+        $validated['sort_order'] = $validated['sort_order'] ?? 0;
+        $validated['published_date'] = $validated['published_date'] ?? now()->toDateString();
+        $validated['author'] = $validated['author'] ?? '';
+        $validated['excerpt'] = $validated['excerpt'] ?? '';
+
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('blogs', 'public');
         } elseif (!empty($validated['image_url'])) {
             $validated['image'] = $validated['image_url'];
         }
         unset($validated['image_url']);
+        
+        if ($request->hasFile('og_image')) {
+            $validated['og_image'] = $request->file('og_image')->store('blogs/og', 'public');
+        }
         
         $tags = $validated['tags'] ?? [];
         unset($validated['tags']);
@@ -83,9 +101,22 @@ class BlogController extends Controller
             'tags' => 'nullable|array',
             'tags.*' => 'exists:blog_tags,id',
             'is_published' => 'boolean',
+            'published_date' => 'nullable|date',
+            'sort_order' => 'integer',
+            'is_featured' => 'boolean',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string',
+            'meta_keywords' => 'nullable|string',
+            'og_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         $validated['slug'] = $validated['slug'] ?? Str::slug($validated['title']);
+        $validated['is_published'] = $request->has('is_published');
+        $validated['is_featured'] = $request->has('is_featured');
+        $validated['sort_order'] = $validated['sort_order'] ?? 0;
+        $validated['author'] = $validated['author'] ?? '';
+        $validated['excerpt'] = $validated['excerpt'] ?? '';
+        
         if ($request->hasFile('image')) {
             if ($blog->getAttribute('image')) {
                 Storage::disk('public')->delete($blog->getAttribute('image'));
@@ -95,6 +126,13 @@ class BlogController extends Controller
             $validated['image'] = $validated['image_url'];
         }
         unset($validated['image_url']);
+        
+        if ($request->hasFile('og_image')) {
+            if ($blog->og_image) {
+                Storage::disk('public')->delete($blog->og_image);
+            }
+            $validated['og_image'] = $request->file('og_image')->store('blogs/og', 'public');
+        }
         
         $tags = $validated['tags'] ?? [];
         unset($validated['tags']);

@@ -1,7 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-<section class="relative overflow-hidden bg-[#1a3251] px-5 py-14 lg:px-10"><div class="mx-auto max-w-7xl"><p class="mb-2 text-xs text-slate-300"><a href="{{ route('home') }}" class="hover:text-white">Home</a> <span class="mx-2 text-emerald-400">/</span> Contact Us</p><h1 class="text-4xl font-bold tracking-wide text-white">Contact Us</h1></div></section>
+<section class="relative overflow-hidden px-5 py-14 lg:px-10 bg-cover bg-center" style="{{ isset($siteSettings['contact_page_hero_image']) && $siteSettings['contact_page_hero_image'] ? 'background-image: linear-gradient(rgba(26, 50, 81, 0.8), rgba(26, 50, 81, 0.8)), url(' . Storage::url($siteSettings['contact_page_hero_image']) . ');' : 'background-color: #1a3251;' }}">
+    <div class="mx-auto max-w-7xl relative z-10"><p class="mb-2 text-xs text-slate-300"><a href="{{ route('home') }}" class="hover:text-white">Home</a> <span class="mx-2 text-emerald-400">/</span> Contact Us</p><h1 class="text-4xl font-bold tracking-wide text-white">Contact Us</h1></div>
+</section>
 <main class="mx-auto max-w-7xl space-y-12 px-5 py-12 lg:px-10">
     @if(session('success'))<div class="border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm text-emerald-800" role="status">{{ session('success') }}</div>@endif
     @if($errors->any())<div class="border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-800" role="alert"><ul class="list-disc pl-5">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif

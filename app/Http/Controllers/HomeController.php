@@ -30,6 +30,12 @@ class HomeController extends Controller
             'job_applications' => JobApplication::count(),
         ];
 
-        return view('admin.dashboard', compact('stats'));
+        // Fetch Business Registration services for the home page
+        $businessRegistrationCategory = \App\Models\ServiceCategory::where('slug', 'business-registration')->first();
+        $businessRegistrationServices = $businessRegistrationCategory 
+            ? $businessRegistrationCategory->services()->where('status', true)->orderBy('sort_order')->get() 
+            : collect();
+
+        return view('admin.dashboard', compact('stats', 'businessRegistrationServices'));
     }
 }
