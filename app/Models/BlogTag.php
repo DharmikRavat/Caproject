@@ -9,7 +9,17 @@ class BlogTag extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'slug'];
+    protected $fillable = [
+        'name', 
+        'slug', 
+        'description', 
+        'image', 
+        'meta_title', 
+        'meta_description', 
+        'meta_keywords', 
+        'is_active', 
+        'sort_order'
+    ];
 
     public function blogs()
     {

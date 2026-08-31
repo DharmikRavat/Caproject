@@ -34,6 +34,7 @@ class TeamMemberController extends Controller
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('team-members', 'public');
         }
+        $validated['is_active'] = $request->has('is_active');
         TeamMember::create($validated);
         return redirect()->route('admin.team-members.index')->with('success', 'Team member created successfully.');
     }
@@ -61,6 +62,7 @@ class TeamMemberController extends Controller
             }
             $validated['image'] = $request->file('image')->store('team-members', 'public');
         }
+        $validated['is_active'] = $request->has('is_active');
         $teamMember->update($validated);
         return redirect()->route('admin.team-members.index')->with('success', 'Team member updated successfully.');
     }

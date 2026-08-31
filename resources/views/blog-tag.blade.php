@@ -1,21 +1,23 @@
 @extends('layouts.app')
 
-@section('title', $category->meta_title ?: $category->name . ' Blogs | ' . config('app.name', 'Laravel'))
-@section('meta_description', $category->meta_description)
-@section('meta_keywords', $category->meta_keywords)
+@section('title', 'Posts Tagged: ' . $tag->name . ' | ' . config('app.name', 'Laravel'))
+@section('meta_description', 'Read our latest blogs tagged with ' . $tag->name)
 
 @section('content')
 
 <!-- HERO BANNER -->
-<section class="relative overflow-hidden bg-slate-800 bg-cover bg-center px-5 py-24 lg:px-10" style="background-image: linear-gradient(rgba(13,35,58,.8), rgba(13,35,58,.8)), url('{{ $category->banner_image ? Storage::url($category->banner_image) : 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1600&q=80' }}');">
+@php
+    $tagImage = $tag->image ? Storage::url($tag->image) : 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1600&q=80';
+@endphp
+<section class="relative overflow-hidden bg-slate-800 bg-cover bg-center px-5 py-24 lg:px-10" style="background-image: linear-gradient(rgba(13,35,58,.8), rgba(13,35,58,.8)), url('{{ $tagImage }}');">
     <div class="mx-auto max-w-7xl text-center">
-        <h1 class="text-4xl font-extrabold uppercase tracking-tight text-white md:text-5xl drop-shadow-lg mb-4">{{ $category->name }}</h1>
+        <h1 class="text-4xl font-extrabold uppercase tracking-tight text-white md:text-5xl drop-shadow-lg mb-4">Tag: {{ $tag->name }}</h1>
         <div class="flex items-center justify-center space-x-2 text-sm mt-4 font-semibold text-blue-200">
             <a href="{{ route('home') }}" class="hover:text-white transition">Home</a>
             <i class="fas fa-chevron-right text-xs mx-2"></i>
             <a href="{{ route('blogs') }}" class="hover:text-white transition">Blogs</a>
             <i class="fas fa-chevron-right text-xs mx-2"></i>
-            <span class="text-emerald-400">{{ $category->name }}</span>
+            <span class="text-emerald-400">Tag: {{ $tag->name }}</span>
         </div>
     </div>
 </section>
@@ -23,9 +25,9 @@
 <!-- MAIN CONTENT & SIDEBAR -->
 <main class="mx-auto max-w-7xl px-5 py-16 lg:px-10">
     
-    @if($category->description)
+    @if($tag->description)
         <div class="mb-12 bg-emerald-50 border-l-4 border-emerald-500 p-6 rounded-r-xl shadow-sm">
-            <p class="text-gray-700 text-lg leading-relaxed">{{ $category->description }}</p>
+            <p class="text-gray-700 text-lg leading-relaxed">{{ $tag->description }}</p>
         </div>
     @endif
 
@@ -35,13 +37,13 @@
         <section class="lg:w-2/3">
             
             <h2 class="text-2xl font-bold uppercase tracking-tight text-gray-900 mb-8 border-b-2 border-emerald-500 inline-block pb-2">
-                {{ $category->name }} Articles
+                Posts tagged "{{ $tag->name }}"
             </h2>
 
             @if(request('search'))
                 <div class="mb-8 p-4 bg-emerald-50 border border-emerald-100 rounded text-emerald-800 font-medium flex justify-between items-center">
-                    <span>Search results for: "<strong>{{ request('search') }}</strong>" in {{ $category->name }}</span>
-                    <a href="{{ route('blog.category', $category->slug) }}" class="text-emerald-600 hover:text-emerald-800 text-sm underline">Clear Search</a>
+                    <span>Search results for: "<strong>{{ request('search') }}</strong>" in tag {{ $tag->name }}</span>
+                    <a href="{{ route('blog.tag', $tag->slug) }}" class="text-emerald-600 hover:text-emerald-800 text-sm underline">Clear Search</a>
                 </div>
             @endif
 
@@ -50,8 +52,8 @@
                     <x-blog-card :blog="$blog" />
                 @empty
                     <div class="col-span-full bg-gray-50 border border-gray-100 rounded-lg p-12 text-center shadow-sm">
-                        <i class="fas fa-folder-open text-4xl text-gray-300 mb-4"></i>
-                        <p class="text-slate-500 font-medium text-lg">No blogs found in this category.</p>
+                        <i class="fas fa-tags text-4xl text-gray-300 mb-4"></i>
+                        <p class="text-slate-500 font-medium text-lg">No blogs found for this tag.</p>
                     </div>
                 @endforelse
             </div>

@@ -25,48 +25,9 @@ class DatabaseSeeder extends Seeder
             'is_admin' => true,
         ]);
 
-        Service::create([
-            'title' => 'GST Registration & Filing',
-            'slug' => 'gst-registration-filing',
-            'category' => 'ca_services',
-            'icon' => 'file-invoice-dollar',
-            'short_description' => 'Professional GST registration, return filing, and compliance support.',
-            'description' => 'We help businesses with GST registration, monthly/quarterly returns, reconciliations, notices, and ongoing compliance support to keep operations smooth and legally compliant.',
-            'featured' => true,
-            'is_active' => true,
+        $this->call([
+            ServiceHierarchySeeder::class,
         ]);
-
-        Service::create([
-            'title' => 'Income Tax Advisory',
-            'slug' => 'income-tax-advisory',
-            'category' => 'ca_services',
-            'icon' => 'calculator',
-            'short_description' => 'Strategic tax planning and smooth ITR filing services.',
-            'description' => 'Our team provides tax planning, ITR preparation, capital gains support, and advisory services for individuals, HUFs, businesses, and partnerships.',
-            'featured' => true,
-            'is_active' => true,
-        ]);
-
-        Service::create([
-            'title' => 'Audit & Assurance',
-            'slug' => 'audit-assurance',
-            'category' => 'ca_services',
-            'icon' => 'clipboard-check',
-            'short_description' => 'Reliable audit, review, and internal control services.',
-            'description' => 'We deliver statutory audit, tax audit, internal audit, and assurance support with a focus on accuracy, risk mitigation, and governance.',
-            'featured' => true,
-            'is_active' => true,
-        ]);
-
-        Service::create(['title' => 'Professional Tax Registration', 'slug' => 'professional-tax-registration', 'category' => 'business_registration', 'description' => 'Description', 'icon' => 'fa-file-invoice']);
-        Service::create(['title' => 'FSSAI Registration', 'slug' => 'fssai-registration', 'category' => 'business_registration', 'description' => 'Description', 'icon' => 'fa-leaf']);
-        Service::create(['title' => 'RERA Registration', 'slug' => 'rera-registration', 'category' => 'business_registration', 'description' => 'Description', 'icon' => 'fa-building']);
-        Service::create(['title' => 'Shop Act Registration', 'slug' => 'shop-act-registration', 'category' => 'business_registration', 'description' => 'Description', 'icon' => 'fa-store']);
-        
-        Service::create(['title' => 'Section 8 Company Registration', 'slug' => 'section-8-company-registration', 'category' => 'company_formation', 'description' => 'Description', 'icon' => 'fa-hands-helping']);
-        Service::create(['title' => 'Sole Proprietorship Firm', 'slug' => 'sole-proprietorship-firm', 'category' => 'company_formation', 'description' => 'Description', 'icon' => 'fa-user-tie']);
-        Service::create(['title' => 'Private Limited Company', 'slug' => 'private-limited-company', 'category' => 'company_formation', 'description' => 'Description', 'icon' => 'fa-city']);
-        Service::create(['title' => 'One Person Company', 'slug' => 'one-person-company', 'category' => 'company_formation', 'description' => 'Description', 'icon' => 'fa-user']);
 
         Industry::create([
             'name' => 'Manufacturing',

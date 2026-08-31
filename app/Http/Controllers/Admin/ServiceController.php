@@ -63,6 +63,7 @@ class ServiceController extends Controller
 
         $validated['description'] = $validated['description'] ?? '';
         $validated['short_description'] = $validated['short_description'] ?? '';
+        $validated['status'] = $request->has('status');
 
         Service::create($validated);
         return redirect()->route('admin.services.index')->with('success', 'Service created successfully.');
@@ -115,6 +116,7 @@ class ServiceController extends Controller
 
         $validated['description'] = $validated['description'] ?? '';
         $validated['short_description'] = $validated['short_description'] ?? '';
+        $validated['status'] = $request->has('status');
 
         $service->update($validated);
         return redirect()->route('admin.services.index')->with('success', 'Service updated successfully.');

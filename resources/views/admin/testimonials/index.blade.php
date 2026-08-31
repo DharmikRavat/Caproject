@@ -25,7 +25,6 @@
                             <th>Image</th>
                             <th>Rating</th>
                             <th>Source</th>
-                            <th>Order</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
@@ -58,7 +57,6 @@
                                     @endfor
                                 </td>
                                 <td>{{ $testimonial->source }}</td>
-                                <td>{{ $testimonial->sort_order }}</td>
                                 <td>
                                     @if($testimonial->is_active)
                                         <span class="badge bg-success">Active</span>

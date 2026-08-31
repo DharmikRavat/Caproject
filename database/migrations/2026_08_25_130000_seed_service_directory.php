@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Service;
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Str;
 
@@ -34,7 +34,7 @@ return new class extends Migration
 
         foreach ($services as $category => $titles) {
             foreach ($titles as $title) {
-                Service::firstOrCreate(
+                \Illuminate\Support\Facades\DB::table('services')->updateOrInsert(
                     ['slug' => Str::slug($title)],
                     [
                         'title' => $title,
@@ -42,6 +42,8 @@ return new class extends Migration
                         'short_description' => 'Professional support for ' . strtolower($title) . '.',
                         'description' => 'Our team provides practical, compliant, and timely support for ' . strtolower($title) . '.',
                         'is_active' => true,
+                        'created_at' => now(),
+                        'updated_at' => now(),
                     ]
                 );
             }

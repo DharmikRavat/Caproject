@@ -11,17 +11,27 @@ use Illuminate\Support\Str;
 
 class BlogController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $blogs = Blog::latest()->get();
-        return view('admin.blogs.index', compact('blogs'));
+        $query = Blog::latest();
+        
+        if ($request->has('category_id')) {
+            $query->where('blog_category_id', $request->category_id);
+            $selectedCategory = BlogCategory::find($request->category_id);
+        } else {
+            $selectedCategory = null;
+        }
+        
+        $blogs = $query->get();
+        return view('admin.blogs.index', compact('blogs', 'selectedCategory'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $categories = BlogCategory::all();
         $tags = BlogTag::all();
-        return view('admin.blogs.form', ['blog' => new Blog(), 'route' => route('admin.blogs.store'), 'categories' => $categories, 'tags' => $tags]);
+        $selectedCategoryId = $request->category_id;
+        return view('admin.blogs.form', ['blog' => new Blog(), 'route' => route('admin.blogs.store'), 'categories' => $categories, 'tags' => $tags, 'selectedCategoryId' => $selectedCategoryId]);
     }
 
     public function store(Request $request)

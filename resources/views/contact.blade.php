@@ -12,6 +12,9 @@
         <div class="space-y-4"><div class="border border-slate-100 p-5 shadow-sm"><div class="flex items-start gap-4"><div class="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-emerald-300 text-emerald-600"><i class="fas fa-location-dot"></i></div><div><h3 class="font-bold text-slate-900">Address Info</h3><p class="mt-1 text-sm leading-6 text-slate-500">{{ $siteSettings['contact_address'] ?? '' }}</p></div></div></div><div class="border border-slate-100 p-5 shadow-sm"><div class="flex items-start gap-4"><div class="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-emerald-300 text-emerald-600"><i class="far fa-clock"></i></div><div><h3 class="font-bold text-slate-900">Office Schedule</h3><p class="mt-1 whitespace-pre-line text-sm leading-6 text-slate-500">{{ $siteSettings['contact_page_schedule'] }}</p></div></div></div><div class="border border-slate-100 p-5 shadow-sm"><div class="flex items-start gap-4"><div class="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-emerald-300 text-emerald-600"><i class="far fa-envelope"></i></div><div><h3 class="font-bold text-slate-900">Email &amp; Phone</h3><p class="mt-1 text-sm leading-6 text-slate-500">Phone: {{ $siteSettings['contact_phone'] ?? '' }}<br>Email: {{ $siteSettings['contact_email'] ?? '' }}</p></div></div></div></div>
     </section>
     @if($siteSettings['contact_page_map'] ?? false)<section class="h-80 overflow-hidden border border-slate-300"><iframe src="{{ $siteSettings['contact_page_map'] }}" width="100%" height="100%" style="border:0" allowfullscreen loading="lazy" title="Office location map"></iframe></section>@endif
-
+    
+    <div class="px-5 lg:px-10 max-w-7xl mx-auto pb-12">
+        @include('components.frontend.our-services')
+    </div>
 </main>
 @endsection

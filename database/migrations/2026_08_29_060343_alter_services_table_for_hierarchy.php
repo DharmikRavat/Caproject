@@ -14,15 +14,22 @@ return new class extends Migration
     public function up()
     {
         Schema::table('services', function (Blueprint $table) {
-            // These columns were already dropped/added in the failed attempt
-            // We just need to do the renaming which requires doctrine/dbal, and add foreign keys
-            
             $table->renameColumn('title', 'name');
-            $table->renameColumn('full_description', 'description');
-            $table->renameColumn('is_active', 'status');
+        });
 
-            $table->foreign('category_id')->references('id')->on('service_categories')->onDelete('set null');
-            $table->foreign('parent_service_id')->references('id')->on('services')->onDelete('cascade');
+        Schema::table('services', function (Blueprint $table) {
+            $table->renameColumn('is_active', 'status');
+        });
+        Schema::table('services', function (Blueprint $table) {
+            $table->foreignId('category_id')->nullable()->constrained('service_categories')->onDelete('set null');
+            $table->foreignId('parent_service_id')->nullable()->constrained('services')->onDelete('cascade');
+            $table->string('featured_image')->nullable();
+            $table->string('banner_image')->nullable();
+
+            $table->integer('sort_order')->default(0);
+            $table->string('meta_title')->nullable();
+            $table->text('meta_description')->nullable();
+            $table->string('meta_keywords')->nullable();
         });
     }
 

@@ -5,13 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Home') - {{ $siteSettings['site_name'] ?? 'Jitesh Telisara & Associates LLP' }}</title>
+    <meta name="description" content="@yield('meta_description', 'Explore expert insights from certified Chartered Accountants. Stay updated with tax laws, auditing standards, GST tips, personal finance strategies, and business compliance guides.')">
+    <meta name="keywords" content="@yield('meta_keywords', 'CA near me, CA firms near me, Chartered Accountant firms near me, CA office near me, CA in Kharadi, Chartered Accountant in Kharadi')">
+    <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
+    <link rel="canonical" href="@yield('canonical', url()->current())">
+    @stack('meta')
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
     <style>
         .navy-bg { background-color: #1a3251; }
         .navy-card { background-color: #1f375d; }

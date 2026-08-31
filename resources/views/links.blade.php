@@ -76,9 +76,10 @@
         margin: 0 auto;
     }
     .intro-text {
-        font-size: 14px;
+        font-size: 16px;
         color: #777;
         margin-bottom: 40px;
+        line-height: 1.8;
     }
 
     /* --- Two Column Links Grid --- */
@@ -90,7 +91,7 @@
     }
     .link-section { margin-bottom: 40px; }
     .link-section h2 {
-        font-size: 22px;
+        font-size: 26px;
         color: #24354d;
         margin-bottom: 15px;
         font-weight: 700;
@@ -103,19 +104,20 @@
         text-decoration: none;
         color: #27ae60;
         padding: 12px 5px;
-        font-size: 14px;
+        font-size: 18px;
+        font-weight: 500;
         transition: background-color 0.2s ease;
     }
     .link-list a:hover { background-color: #f9f9f9; }
     .link-list .icon {
         color: #555;
-        font-size: 12px;
+        font-size: 14px;
         margin-right: 15px;
     }
 
     /* --- Bottom Paragraph --- */
     .bottom-description {
-        font-size: 13px;
+        font-size: 15px;
         color: #666;
         text-align: justify;
         line-height: 1.8;

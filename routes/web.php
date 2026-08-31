@@ -2,13 +2,16 @@
 
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\LinkController;
+use App\Http\Controllers\Admin\BlogArchiveController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/blogs', [PageController::class, 'blogs'])->name('blogs');
 Route::get('/blogs', [PageController::class, 'blogs'])->name('blogs');
-Route::get('/category/{slug}', [PageController::class, 'blogCategory'])->name('blog.category');
+Route::get('/blogs/category/{slug}', [PageController::class, 'blogCategory'])->name('blog.category');
+Route::get('/blogs/tag/{slug}', [PageController::class, 'blogTag'])->name('blog.tag');
+Route::get('/blogs/archive/{slug}', [PageController::class, 'blogArchive'])->name('blog.archive');
 Route::get('/blogs/{slug}', [PageController::class, 'blog'])->name('blog.show');
 Route::get('/careers', [PageController::class, 'careers'])->name('careers');
 Route::get('/careers/{slug}', [PageController::class, 'career'])->name('career.show');
@@ -28,6 +31,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('blogs', App\Http\Controllers\BlogController::class);
     Route::resource('careers', App\Http\Controllers\CareerController::class);
     Route::resource('team-members', App\Http\Controllers\TeamMemberController::class);
+    // Blog Archives
+    Route::resource('blog-archives', BlogArchiveController::class);
+
+    // Banners
     Route::resource('banners', App\Http\Controllers\BannerController::class);
     Route::resource('service-categories', App\Http\Controllers\Admin\ServiceCategoryController::class);
     Route::resource('services', App\Http\Controllers\Admin\ServiceController::class);

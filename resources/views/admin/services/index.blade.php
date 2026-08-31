@@ -41,7 +41,7 @@
                         @forelse($services as $service)
                             <tr>
                                 <td>{{ $service->name }}</td>
-                                <td>{{ $service->category ? $service->category->name : 'N/A' }}</td>
+                                <td>{{ $service->category()->first() ? $service->category()->first()->name : 'N/A' }}</td>
                                 <td>{{ $service->slug }}</td>
                                 <td>
                                     <span class="badge {{ $service->status ? 'bg-success' : 'bg-danger' }}">

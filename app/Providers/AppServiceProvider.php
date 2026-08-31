@@ -43,8 +43,8 @@ class AppServiceProvider extends ServiceProvider
             }));
         });
 
-        // Pass global categories and their services to the header for the Mega Menu
-        view()->composer('components.frontend.header', function ($view) {
+        // Pass global categories and their services to the header and footer
+        view()->composer(['components.frontend.header', 'components.frontend.footer'], function ($view) {
             $globalServiceCategories = \App\Models\ServiceCategory::with(['services' => function($q) {
                 $q->where('status', true)->orderBy('sort_order');
             }])->whereNull('parent_id')

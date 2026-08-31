@@ -38,6 +38,7 @@ class CareerController extends Controller
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('careers', 'public');
         }
+        $validated['is_active'] = $request->has('is_active');
         Career::create($validated);
 
         return redirect()->route('admin.careers.index')->with('success', 'Career opportunity created successfully.');
@@ -69,6 +70,7 @@ class CareerController extends Controller
             }
             $validated['image'] = $request->file('image')->store('careers', 'public');
         }
+        $validated['is_active'] = $request->has('is_active');
         $career->update($validated);
 
         return redirect()->route('admin.careers.index')->with('success', 'Career opportunity updated successfully.');

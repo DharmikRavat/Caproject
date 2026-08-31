@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BlogCategory extends Model
+class BlogArchive extends Model
 {
     use HasFactory;
 
@@ -13,10 +13,8 @@ class BlogCategory extends Model
         'name',
         'slug',
         'description',
-        'banner_image',
         'image',
         'is_active',
-        'sort_order',
         'meta_title',
         'meta_description',
         'meta_keywords',

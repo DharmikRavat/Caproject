@@ -39,6 +39,8 @@ class IndustryController extends Controller
             $validated['image'] = $request->file('image')->store('industries', 'public');
         }
 
+        $validated['is_active'] = $request->has('is_active');
+
         Industry::create($validated);
         return redirect()->route('admin.industries.index')->with('success', 'Industry created successfully.');
     }
@@ -65,6 +67,8 @@ class IndustryController extends Controller
             }
             $validated['image'] = $request->file('image')->store('industries', 'public');
         }
+
+        $validated['is_active'] = $request->has('is_active');
 
         $industry->update($validated);
         return redirect()->route('admin.industries.index')->with('success', 'Industry updated successfully.');

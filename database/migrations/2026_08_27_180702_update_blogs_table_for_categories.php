@@ -15,6 +15,9 @@ return new class extends Migration
     {
         Schema::table('blogs', function (Blueprint $table) {
             $table->dropColumn(['category', 'tags']);
+        });
+
+        Schema::table('blogs', function (Blueprint $table) {
             $table->foreignId('blog_category_id')->nullable()->constrained('blog_categories')->nullOnDelete();
         });
     }

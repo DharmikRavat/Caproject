@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Banner;
+use App\Models\BlogArchive;
 use App\Models\Blog;
 use App\Models\Career;
 use App\Models\ContactEnquiry;
@@ -10,6 +10,7 @@ use App\Models\Industry;
 use App\Models\JobApplication;
 use App\Models\Service;
 use App\Models\TeamMember;
+use App\Models\Banner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -51,6 +52,21 @@ class PageController extends Controller
 
 
 
+    private function getBlogSidebarData()
+    {
+        $recentBlogs = Blog::where('is_published', true)->orderBy('published_date', 'desc')->take(3)->get();
+        $categories = \App\Models\BlogCategory::where('is_active', true)->withCount(['blogs' => function($q) { $q->where('is_published', true); }])->orderBy('name')->get();
+        $tags = \App\Models\BlogTag::withCount(['blogs' => function($q) { $q->where('is_published', true); }])->orderBy('name')->get();
+        
+        $archives = BlogArchive::withCount(['blogs' => function($q) { $q->where('is_published', true); }])
+            ->where('is_active', true)
+            ->whereHas('blogs', function($q) { $q->where('is_published', true); })
+            ->orderBy('created_at', 'desc')
+            ->get();
+            
+        return compact('recentBlogs', 'categories', 'tags', 'archives');
+    }
+
     public function blogs()
     {
         $query = Blog::with(['category', 'tags'])->where('is_published', true);
@@ -80,27 +96,21 @@ class PageController extends Controller
 
         if (request()->filled('month')) {
             $month = request('month');
-            $query->whereRaw("DATE_FORMAT(created_at, '%Y-%m') = ?", [$month]);
+            $parts = explode('-', $month);
+            if (count($parts) == 2) {
+                $query->whereYear('created_at', $parts[0])->whereMonth('created_at', $parts[1]);
+            }
         }
 
-        $blogs = $query->latest()->paginate(3)->appends(request()->query());
-        $recentBlogs = Blog::where('is_published', true)->latest()->take(3)->get();
-        
-        $categories = \App\Models\BlogCategory::withCount('blogs')->orderBy('name')->get();
-        $tags = \App\Models\BlogTag::withCount('blogs')->orderBy('name')->get();
-        
-        $archives = Blog::where('is_published', true)
-            ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as month, count(*) as total")
-            ->groupBy('month')
-            ->orderBy('month', 'desc')
-            ->get();
+        $blogs = $query->orderBy('published_date', 'desc')->paginate(3)->appends(request()->query());
+        $sidebarData = $this->getBlogSidebarData();
 
-        return view('blogs', compact('blogs', 'recentBlogs', 'categories', 'tags', 'archives'));
+        return view('blogs', array_merge(compact('blogs'), $sidebarData));
     }
 
     public function blogCategory($slug)
     {
-        $category = \App\Models\BlogCategory::where('slug', $slug)->firstOrFail();
+        $category = \App\Models\BlogCategory::where('slug', $slug)->where('is_active', true)->firstOrFail();
         
         $query = Blog::where('blog_category_id', $category->id)->where('is_published', true);
 
@@ -114,9 +124,60 @@ class PageController extends Controller
         }
 
         $blogs = $query->orderBy('sort_order')->orderBy('published_date', 'desc')->paginate(9)->appends(request()->query());
-        $recentBlogs = Blog::where('is_published', true)->orderBy('published_date', 'desc')->take(3)->get();
+        $sidebarData = $this->getBlogSidebarData();
         
-        return view('blog-category', compact('category', 'blogs', 'recentBlogs'));
+        return view('blog-category', array_merge(compact('category', 'blogs'), $sidebarData));
+    }
+
+    public function blogTag($slug)
+    {
+        $tag = \App\Models\BlogTag::where('slug', $slug)->firstOrFail();
+        
+        $query = $tag->blogs()->where('is_published', true);
+
+        if (request()->filled('search')) {
+            $search = request('search');
+            $query->where(function ($builder) use ($search) {
+                $builder->where('title', 'like', "%{$search}%")
+                    ->orWhere('excerpt', 'like', "%{$search}%")
+                    ->orWhere('content', 'like', "%{$search}%");
+            });
+        }
+
+        $blogs = $query->orderBy('published_date', 'desc')->paginate(9)->appends(request()->query());
+        $sidebarData = $this->getBlogSidebarData();
+        
+        return view('blog-tag', array_merge(compact('tag', 'blogs'), $sidebarData));
+    }
+
+    public function blogArchive($slug)
+    {
+        $archive = BlogArchive::where('slug', $slug)
+            ->where('is_active', true)
+            ->firstOrFail();
+
+        $blogsQuery = Blog::with(['category', 'tags'])
+            ->where('is_published', true)
+            ->where('blog_archive_id', $archive->id);
+
+        if (request('search')) {
+            $search = request('search');
+            $blogsQuery->where(function($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('content', 'like', "%{$search}%");
+            });
+        }
+
+        $blogs = $blogsQuery->orderBy('published_date', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->paginate(6);
+
+        $sidebarData = $this->getBlogSidebarData();
+
+        return view('blog-archive', array_merge([
+            'blogs' => $blogs,
+            'archive' => $archive
+        ], $sidebarData));
     }
 
     public function blog($slug)
@@ -133,16 +194,9 @@ class PageController extends Controller
                                 ->get();
         }
         
-        $recentBlogs = Blog::where('is_published', true)->latest()->take(3)->get();
-        $categories = \App\Models\BlogCategory::withCount('blogs')->orderBy('name')->get();
-        $tags = \App\Models\BlogTag::withCount('blogs')->orderBy('name')->get();
-        $archives = Blog::where('is_published', true)
-            ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as month, count(*) as total")
-            ->groupBy('month')
-            ->orderBy('month', 'desc')
-            ->get();
+        $sidebarData = $this->getBlogSidebarData();
         
-        return view('blog', compact('blog', 'relatedBlogs', 'recentBlogs', 'categories', 'tags', 'archives'));
+        return view('blog', array_merge(compact('blog', 'relatedBlogs'), $sidebarData));
     }
 
     public function careers()
@@ -160,7 +214,8 @@ class PageController extends Controller
 
     public function contact()
     {
-        return view('contact');
+        $serviceCategories = \App\Models\ServiceCategory::with(['services' => function($q) { $q->where('status', true); }])->whereNull('parent_id')->where('status', true)->orderBy('sort_order')->get();
+        return view('contact', compact('serviceCategories'));
     }
 
     public function submitContact(Request $request)

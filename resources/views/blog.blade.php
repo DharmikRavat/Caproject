@@ -5,15 +5,54 @@
 @section('meta_keywords', $blog->meta_keywords ?? '')
 
 @push('meta')
-    <meta property="og:title" content="{{ $blog->meta_title ?? $blog->title }}">
-    <meta property="og:description" content="{{ $blog->meta_description ?? Str::limit(strip_tags($blog->content), 160) }}">
-    <meta property="og:type" content="article">
-    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="{{ $blog->meta_title ?? $blog->title }}" />
+    <meta property="og:description" content="{{ $blog->meta_description ?? Str::limit(strip_tags($blog->content), 160) }}" />
+    <meta property="og:url" content="{{ url()->current() }}" />
+    <meta property="og:site_name" content="{{ $siteSettings['site_name'] ?? 'CA Jitesh Telisara' }}" />
+    <meta property="og:updated_time" content="{{ $blog->updated_at->toIso8601String() }}" />
+    <meta property="article:published_time" content="{{ $blog->published_date ? \Carbon\Carbon::parse($blog->published_date)->toIso8601String() : $blog->created_at->toIso8601String() }}" />
+    <meta property="article:modified_time" content="{{ $blog->updated_at->toIso8601String() }}" />
+    
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{ $blog->meta_title ?? $blog->title }}" />
+    <meta name="twitter:description" content="{{ $blog->meta_description ?? Str::limit(strip_tags($blog->content), 160) }}" />
+    <meta name="twitter:label1" content="Time to read" />
+    <meta name="twitter:data1" content="{{ ceil(str_word_count(strip_tags($blog->content)) / 200) }} minute(s)" />
+
     @if($blog->og_image)
-        <meta property="og:image" content="{{ Storage::url($blog->og_image) }}">
+        <meta property="og:image" content="{{ Storage::url($blog->og_image) }}" />
+        <meta name="twitter:image" content="{{ Storage::url($blog->og_image) }}" />
     @elseif($blog->image)
-        <meta property="og:image" content="{{ Storage::url($blog->image) }}">
+        <meta property="og:image" content="{{ Storage::url($blog->image) }}" />
+        <meta name="twitter:image" content="{{ Storage::url($blog->image) }}" />
     @endif
+
+    <script type="application/ld+json" class="rank-math-schema">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Article",
+          "headline": "{{ $blog->meta_title ?? $blog->title }}",
+          "keywords": "{{ $blog->meta_keywords ?? '' }}",
+          "datePublished": "{{ $blog->published_date ? \Carbon\Carbon::parse($blog->published_date)->toIso8601String() : $blog->created_at->toIso8601String() }}",
+          "dateModified": "{{ $blog->updated_at->toIso8601String() }}",
+          "author": {
+            "@type": "Person",
+            "name": "{{ $blog->author ?? 'admin' }}"
+          },
+          "description": "{{ $blog->meta_description ?? Str::limit(strip_tags($blog->content), 160) }}",
+          "name": "{{ $blog->meta_title ?? $blog->title }}",
+          "url": "{{ url()->current() }}"
+          @if($blog->og_image || $blog->image)
+          ,"image": "{{ Storage::url($blog->og_image ?? $blog->image) }}"
+          @endif
+        }
+      ]
+    }
+    </script>
 @endpush
 
 @section('content')
@@ -97,72 +136,13 @@
             @endif
         </section>
 
-        <!-- SIDEBAR (30%) -->
-        <aside class="lg:w-1/3 space-y-10">
-            <!-- Search Widget -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 class="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100 relative after:absolute after:bottom-[-1px] after:left-0 after:w-12 after:h-[2px] after:bg-emerald-500">Search Articles</h3>
-                <form action="{{ route('blogs') }}" method="GET" class="relative">
-                    <input type="search" name="search" placeholder="Search topics..." class="w-full bg-gray-50 border border-gray-200 rounded px-4 py-3 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none transition">
-                    <button type="submit" aria-label="Search" class="absolute right-3 top-3 text-emerald-600 hover:text-emerald-800 transition">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </form>
-            </div>
-
-            <!-- Categories Widget -->
-            @if(isset($categories) && $categories->count() > 0)
-                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100 relative after:absolute after:bottom-[-1px] after:left-0 after:w-12 after:h-[2px] after:bg-emerald-500">Categories</h3>
-                    <ul class="space-y-3">
-                        @foreach($categories as $cat)
-                            <li>
-                                <a href="{{ route('blog.category', $cat->slug) }}" class="flex items-center justify-between text-gray-600 hover:text-emerald-600 transition group font-medium text-sm">
-                                    <span><i class="fas fa-angle-right text-xs mr-2 text-emerald-400 group-hover:translate-x-1 transition-transform"></i> {{ $cat->name }}</span>
-                                    <span class="bg-gray-100 text-gray-500 text-xs px-2 py-0.5 rounded group-hover:bg-emerald-100 group-hover:text-emerald-700 transition">{{ $cat->blogs()->where('is_published', true)->count() }}</span>
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            <!-- Recent Posts Widget -->
-            @if(isset($recentBlogs) && $recentBlogs->count() > 0)
-                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100 relative after:absolute after:bottom-[-1px] after:left-0 after:w-12 after:h-[2px] after:bg-emerald-500">Recent Posts</h3>
-                    <div class="space-y-5">
-                        @foreach($recentBlogs as $recent)
-                            <a href="{{ route('blog.show', $recent->slug) }}" class="flex gap-4 group">
-                                <div class="w-20 h-20 shrink-0 rounded overflow-hidden">
-                                    <img src="{{ $blogImage($recent) }}" alt="{{ $recent->title }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
-                                </div>
-                                <div class="flex flex-col justify-center">
-                                    <h4 class="text-sm font-bold text-gray-800 leading-tight group-hover:text-emerald-600 transition line-clamp-2 mb-1">{{ $recent->title }}</h4>
-                                    <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-500">
-                                        {{ $recent->published_date ? \Carbon\Carbon::parse($recent->published_date)->format('M d, Y') : $recent->created_at->format('M d, Y') }}
-                                    </span>
-                                </div>
-                            </a>
-                        @endforeach
-                    </div>
-                </div>
-            @endif
-            
-            <!-- Tags Widget -->
-            @if(isset($tags) && $tags->count() > 0)
-                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100 relative after:absolute after:bottom-[-1px] after:left-0 after:w-12 after:h-[2px] after:bg-emerald-500">Tags</h3>
-                    <div class="flex flex-wrap gap-2">
-                        @foreach($tags as $tag)
-                            <a href="{{ route('blogs', ['tag' => $tag->slug]) }}" class="bg-gray-100 text-gray-600 px-3 py-1.5 text-[11px] font-bold uppercase rounded hover:bg-emerald-600 hover:text-white transition">
-                                {{ $tag->name }}
-                            </a>
-                        @endforeach
-                    </div>
-                </div>
-            @endif
-        </aside>
+        <!-- SIDEBAR -->
+        <x-blog-sidebar 
+            :recentBlogs="$recentBlogs ?? collect()" 
+            :categories="$categories ?? collect()" 
+            :tags="$tags ?? collect()" 
+            :archives="$archives ?? collect()" 
+        />
     </div>
 </main>
 @endsection

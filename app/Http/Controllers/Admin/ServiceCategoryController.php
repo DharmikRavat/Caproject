@@ -43,6 +43,8 @@ class ServiceCategoryController extends Controller
             $validated['header_image'] = $request->file('header_image')->store('services/categories/headers', 'public');
         }
 
+        $validated['status'] = $request->has('status');
+
         ServiceCategory::create($validated);
         return redirect()->route('admin.service-categories.index')->with('success', 'Category created successfully.');
     }
@@ -81,6 +83,8 @@ class ServiceCategoryController extends Controller
             }
             $validated['header_image'] = $request->file('header_image')->store('services/categories/headers', 'public');
         }
+
+        $validated['status'] = $request->has('status');
 
         $serviceCategory->update($validated);
         return redirect()->route('admin.service-categories.index')->with('success', 'Category updated successfully.');

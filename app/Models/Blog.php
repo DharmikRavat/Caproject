@@ -16,11 +16,13 @@ class Blog extends Model
     protected $fillable = [
         'title',
         'slug',
+        'original_url',
         'excerpt',
         'content',
         'image',
         'author',
         'blog_category_id',
+        'blog_archive_id',
         'is_published',
         'published_date',
         'sort_order',
@@ -34,6 +36,11 @@ class Blog extends Model
     public function category()
     {
         return $this->belongsTo(BlogCategory::class, 'blog_category_id');
+    }
+
+    public function archive()
+    {
+        return $this->belongsTo(BlogArchive::class, 'blog_archive_id');
     }
 
     public function tags()

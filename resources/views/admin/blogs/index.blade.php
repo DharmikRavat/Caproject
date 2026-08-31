@@ -3,10 +3,23 @@
 @section('content')
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Blogs</h1>
-        <a href="{{ route('admin.blogs.create') }}" class="btn btn-primary">
-            <i class="fas fa-plus fa-sm text-white-50"></i> Add Blog
-        </a>
+        <h1 class="h3 mb-0 text-gray-800">
+            @if(isset($selectedCategory))
+                Blogs for: {{ $selectedCategory->name }}
+            @else
+                Blogs
+            @endif
+        </h1>
+        <div>
+            @if(isset($selectedCategory))
+                <a href="{{ route('admin.blog-categories.index') }}" class="btn btn-secondary me-2"><i class="fas fa-arrow-left"></i> Back to Categories</a>
+                <a href="{{ route('admin.blogs.create', ['category_id' => $selectedCategory->id]) }}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Blog to {{ $selectedCategory->name }}</a>
+            @else
+                <a href="{{ route('admin.blogs.create') }}" class="btn btn-primary">
+                    <i class="fas fa-plus fa-sm text-white-50"></i> Add Blog
+                </a>
+            @endif
+        </div>
     </div>
 
     @if(session('success'))
@@ -24,7 +37,6 @@
                             <th>Category</th>
                             <th>Date</th>
                             <th>Status</th>
-                            <th>Order</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -51,8 +63,6 @@
                                     @else
                                         <span class="badge bg-secondary">Draft</span>
                                     @endif
-                                </td>
-                                <td>{{ $blog->sort_order }}</td>
                                 <td>
                                     <a href="{{ route('admin.blogs.edit', $blog) }}" class="btn btn-sm btn-info">Edit</a>
                                     <form action="{{ route('admin.blogs.destroy', $blog) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this blog?');">
