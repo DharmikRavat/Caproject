@@ -1,5 +1,5 @@
 @if($items && $items->count() > 0)
-<section class="mt-20 overflow-hidden bg-gray-50 py-16">
+<section class="mt-20 overflow-hidden bg-white py-16">
     <div class="max-w-7xl mx-auto px-6">
         @php
             $alignClass = isset($align) && $align === 'left' ? 'text-left' : 'text-center';

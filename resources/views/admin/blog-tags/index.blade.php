@@ -14,7 +14,7 @@
     <div class="card shadow-sm border-0">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover mb-0">
+                <table class="table table-hover align-middle table-hover mb-0">
                     <thead class="bg-light">
                         <tr>
                             <th class="px-4 py-3 border-0">Name</th>

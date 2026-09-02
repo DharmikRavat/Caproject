@@ -46,7 +46,7 @@
                         <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addSectionModal"><i class="fas fa-plus"></i> Add Section</button>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-bordered">
+                        <table class="table table-hover align-middle table-bordered">
                             <thead class="table-light"><tr><th>Title</th><th>Sort Order</th><th>Actions</th></tr></thead>
                             <tbody>
                                 @forelse($service->sections as $section)
@@ -95,7 +95,7 @@
                         <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addStepModal"><i class="fas fa-plus"></i> Add Process Step</button>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-bordered">
+                        <table class="table table-hover align-middle table-bordered">
                             <thead class="table-light"><tr><th>Step #</th><th>Title</th><th>Actions</th></tr></thead>
                             <tbody>
                                 @forelse($service->processSteps as $step)
@@ -141,7 +141,7 @@
                         <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addFaqModal"><i class="fas fa-plus"></i> Add FAQ</button>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-bordered">
+                        <table class="table table-hover align-middle table-bordered">
                             <thead class="table-light"><tr><th>Question</th><th>Sort Order</th><th>Actions</th></tr></thead>
                             <tbody>
                                 @forelse($service->faqs as $faq)
@@ -187,7 +187,7 @@
                         <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addDocModal"><i class="fas fa-plus"></i> Add Document</button>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-bordered">
+                        <table class="table table-hover align-middle table-bordered">
                             <thead class="table-light"><tr><th>Title</th><th>Sort Order</th><th>Actions</th></tr></thead>
                             <tbody>
                                 @forelse($service->documents as $doc)

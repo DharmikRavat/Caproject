@@ -16,7 +16,7 @@
     <div class="card shadow mb-4">
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered" width="100%" cellspacing="0">
+                <table class="table table-hover align-middle table-bordered" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>Archive Name</th>
@@ -34,9 +34,9 @@
                                 <td>{{ $Archive->blogs_count ?? 0 }}</td>
                                 <td>
                                     @if($Archive->is_active)
-                                        <span class="badge bg-success">Active</span>
+                                        <span class="badge bg-success rounded-pill px-3 py-2 fw-medium">Active</span>
                                     @else
-                                        <span class="badge bg-danger">Inactive</span>
+                                        <span class="badge bg-danger rounded-pill px-3 py-2 fw-medium">Inactive</span>
                                     @endif
                                 </td>
                                 <td>

@@ -1,8 +1,8 @@
 <header x-data="{ mobileOpen: false, servicesOpen: false, activeCat: null }" class="sticky top-0 z-50 w-full">
     <!-- Top Navy Bar -->
     <div class="navy-bg text-white text-sm py-2 px-6">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex flex-wrap items-center gap-6">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div class="flex flex-wrap justify-center sm:justify-start items-center gap-4 sm:gap-6 text-xs sm:text-sm">
                 <a href="mailto:{{ $siteSettings['contact_email'] ?? '' }}" class="flex items-center gap-1.5 hover:text-green-300 transition">
                     <i class="fa-solid fa-envelope text-theme-green"></i> 
                     <span>{{ $siteSettings['contact_email'] ?? '' }}</span>
@@ -12,7 +12,7 @@
                     <span>{{ $siteSettings['contact_phone'] ?? '' }}</span>
                 </a>
             </div>
-            <div class="hidden sm:flex items-center space-x-3 text-xs text-gray-300">
+            <div class="hidden md:flex items-center space-x-3 text-xs text-gray-300">
                 <span>{{ $siteSettings['header_office_timing'] ?? '' }}</span>
             </div>
         </div>

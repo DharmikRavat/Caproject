@@ -24,6 +24,7 @@ Auth::routes();
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
+    Route::resource('users', App\Http\Controllers\Admin\AdminUserController::class)->except(['show']);
     Route::resource('topics', App\Http\Controllers\Admin\TopicController::class);
     Route::resource('topic-posts', App\Http\Controllers\Admin\TopicPostController::class);
     Route::resource('blog-categories', App\Http\Controllers\Admin\BlogCategoryController::class);

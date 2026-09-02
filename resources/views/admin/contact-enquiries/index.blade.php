@@ -4,7 +4,7 @@
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4"><h1 class="section-title mb-0">Contact enquiries</h1></div>
     @if(session('success'))<div class="alert alert-success">{{ session('success') }}</div>@endif
-    <div class="card border-0 shadow-sm"><div class="table-responsive"><table class="table table-hover mb-0">
+    <div class="card border-0 shadow-sm"><div class="table-responsive"><table class="table table-hover align-middle table-hover mb-0">
         <thead><tr><th>Name</th><th>Contact</th><th>Subject</th><th>Message</th><th>Status</th><th>Received</th></tr></thead>
         <tbody>
         @forelse($enquiries as $enquiry)

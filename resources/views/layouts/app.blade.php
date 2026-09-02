@@ -57,7 +57,7 @@
         }
     </style>
 </head>
-<body class="bg-white text-gray-700 font-sans antialiased overflow-x-hidden">
+<body class="bg-white text-gray-700 font-sans antialiased">
 
     @include('components.frontend.header')
 

@@ -14,7 +14,7 @@
     <div class="card shadow-sm border-0">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover mb-0">
+                <table class="table table-hover align-middle table-hover mb-0">
                     <thead class="bg-light">
                         <tr>
                             <th class="px-4 py-3 border-0">Title</th>
@@ -28,7 +28,7 @@
                         @forelse($posts as $post)
                             <tr>
                                 <td class="px-4 py-3 align-middle">{{ Str::limit($post->title, 40) }}</td>
-                                <td class="px-4 py-3 align-middle"><span class="badge bg-secondary">{{ $post->topic->title }}</span></td>
+                                <td class="px-4 py-3 align-middle"><span class="badge bg-secondary rounded-pill px-3 py-2 fw-medium">{{ $post->topic->title }}</span></td>
                                 <td class="px-4 py-3 align-middle">{{ $post->is_published ? 'Published' : 'Draft' }}</td>
                                 <td class="px-4 py-3 align-middle">{{ $post->published_date ? $post->published_date->format('d M Y') : 'N/A' }}</td>
                                 <td class="px-4 py-3 align-middle text-end">

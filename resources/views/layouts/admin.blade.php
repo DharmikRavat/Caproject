@@ -118,22 +118,142 @@
     <button class="admin-menu-toggle" type="button" data-admin-menu-toggle aria-label="Toggle admin navigation"><i class="fas fa-bars"></i></button>
     <div class="admin-shell">
         <aside class="admin-sidebar" data-admin-sidebar>
-            <a href="{{ route('admin.dashboard') }}" class="admin-brand"><img src="https://via.placeholder.com/40/ffffff/000000?text=CA" class="admin-brand-logo" alt="CA Logo"><span><strong>{{ $siteSettings['site_name'] ?? 'JITESH TELISARA & ASSOCIATES LLP' }}</strong></span></a>
-            <div class="admin-user"><i class="fas fa-user-shield"></i><span>{{ auth()->user()->name ?? 'Administrator' }}<small>Administrator</small></span></div>
+            <a href="{{ route('admin.dashboard') }}" class="admin-brand">
+                <span class="fs-4 fw-bolder text-white me-2">CA</span>
+                <span><strong>{{ $siteSettings['site_name'] ?? 'JITESH TELISARA' }}</strong></span>
+            </a>
+            <div class="admin-user">
+                <i class="fas fa-user-shield"></i>
+                <span>{{ auth()->user()->name ?? 'Administrator' }}<small>Administrator</small></span>
+            </div>
             <nav class="admin-nav" aria-label="Admin navigation">
                 <p>Workspace</p><a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}"><i class="fas fa-chart-line"></i>Dashboard</a>
                 <p>Website Content</p>
 
                 <a href="{{ route('admin.blogs.index') }}" class="{{ request()->routeIs('admin.blogs.*') ? 'active' : '' }}"><i class="fas fa-newspaper"></i>Blogs</a><a href="{{ route('admin.blog-categories.index') }}" class="{{ request()->routeIs('admin.blog-categories.*') ? 'active' : '' }}"><i class="fas fa-folder"></i>Blog Categories</a><a href="{{ route('admin.blog-tags.index') }}" class="{{ request()->routeIs('admin.blog-tags.*') ? 'active' : '' }}"><i class="fas fa-tags"></i>Blog Tags</a><a href="{{ route('admin.blog-archives.index') }}" class="{{ request()->routeIs('admin.blog-archives.*') ? 'active' : '' }}"><i class="fas fa-archive"></i>Blog Archives</a><a href="{{ route('admin.team-members.index') }}" class="{{ request()->routeIs('admin.team-members.*') ? 'active' : '' }}"><i class="fas fa-users"></i>Team Members</a><a href="{{ route('admin.banners.index') }}" class="{{ request()->routeIs('admin.banners.*') ? 'active' : '' }}"><i class="fas fa-image"></i>Banners</a><a href="{{ route('admin.service-categories.index') }}" class="{{ request()->routeIs('admin.service-categories.*') || request()->routeIs('admin.services.*') ? 'active' : '' }}"><i class="fas fa-briefcase"></i>Services & Content</a><a href="{{ route('admin.industries.index') }}" class="{{ request()->routeIs('admin.industries.*') ? 'active' : '' }}"><i class="fas fa-industry"></i>Verticals We Serve</a><a href="{{ route('admin.testimonials.index') }}" class="{{ request()->routeIs('admin.testimonials.*') ? 'active' : '' }}"><i class="fas fa-star"></i>Happy Clients</a><a href="{{ route('admin.links.edit') }}" class="{{ request()->requestUri === '/admin/links' ? 'active' : '' }}"><i class="fas fa-link"></i>Important Links</a>
-                <p>Operations</p><a href="{{ route('admin.contact-enquiries.index') }}" class="{{ request()->routeIs('admin.contact-enquiries.*') ? 'active' : '' }}"><i class="fas fa-envelope"></i>Enquiries</a><a href="{{ route('admin.job-applications.index') }}" class="{{ request()->routeIs('admin.job-applications.*') ? 'active' : '' }}"><i class="fas fa-file-alt"></i>Job Applications</a><a href="{{ route('admin.site-settings.index') }}" class="{{ request()->routeIs('admin.site-settings.*') ? 'active' : '' }}"><i class="fas fa-cog"></i>Site Settings</a>
+                <p>Operations</p><a href="{{ route('admin.contact-enquiries.index') }}" class="{{ request()->routeIs('admin.contact-enquiries.*') ? 'active' : '' }}"><i class="fas fa-envelope"></i>Enquiries</a><a href="{{ route('admin.job-applications.index') }}" class="{{ request()->routeIs('admin.job-applications.*') ? 'active' : '' }}"><i class="fas fa-file-alt"></i>Job Applications</a>
+                <a href="{{ route('admin.site-settings.index') }}" class="{{ request()->routeIs('admin.site-settings.*') ? 'active' : '' }}"><i class="fas fa-cog"></i>Site Settings</a>
+                <a href="{{ route('admin.users.index') }}" class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}"><i class="fas fa-users-cog"></i>Admin Users</a>
             </nav>
             <div class="admin-sidebar-bottom"><a href="{{ route('home') }}"><i class="fas fa-globe"></i>View website</a><form method="POST" action="{{ route('logout') }}">@csrf<button type="submit"><i class="fas fa-sign-out-alt"></i>Logout</button></form></div>
         </aside>
         <div class="admin-main"><header class="admin-topbar"><div><span class="admin-page-kicker">ADMINISTRATION</span><strong>Content management workspace</strong></div><span class="admin-status"><i class="fas fa-circle"></i> System online</span></header><main>@yield('content')</main></div>
     </div>
     <style>
-        .admin-body{background:#f5f7fa;color:#263238}.admin-shell{display:flex;min-height:100vh}.admin-sidebar{background:#102a43;color:#dbe7f0;display:flex;flex-direction:column;flex:0 0 260px;min-height:100vh;padding:25px 15px;position:sticky;top:0}.admin-brand{align-items:center;color:#fff;display:flex;gap:10px;margin:0 10px 28px;text-decoration:none}.admin-brand-logo{height:40px;width:40px;object-fit:contain;border-radius:4px;background:#fff;padding:2px;}.admin-brand strong{display:block;font-size:13px;letter-spacing:.3px}.admin-brand small{color:#09b85b;display:block;font-size:9px;font-weight:700;margin-top:3px}.admin-user{align-items:center;background:#173c5d;border:1px solid #285477;border-radius:7px;display:flex;font-size:13px;gap:11px;margin:0 5px 23px;padding:12px}.admin-user>i{color:#37d879;font-size:18px}.admin-user small{color:#9db3c5;display:block;font-size:10px;margin-top:2px}.admin-nav{flex:1}.admin-nav p{color:#7f9bb0;font-size:10px;font-weight:700;letter-spacing:1.1px;margin:20px 10px 7px;text-transform:uppercase}.admin-nav a,.admin-sidebar-bottom a,.admin-sidebar-bottom button{align-items:center;background:transparent;border:0;border-radius:6px;color:#c5d5e0;display:flex;font-size:13px;gap:12px;margin:2px 0;padding:11px 12px;text-align:left;text-decoration:none;width:100%}.admin-nav a i,.admin-sidebar-bottom i{color:#8eabba;width:17px}.admin-nav a:hover,.admin-nav a.active{background:#09a954;color:#fff}.admin-nav a:hover i,.admin-nav a.active i{color:#fff}.admin-sidebar-bottom{border-top:1px solid #2a4961;padding-top:14px}.admin-sidebar-bottom form{margin:0}.admin-sidebar-bottom button{cursor:pointer}.admin-sidebar-bottom a:hover,.admin-sidebar-bottom button:hover{color:#fff}.admin-main{flex:1;min-width:0}.admin-topbar{align-items:center;background:#fff;border-bottom:1px solid #e4e9ed;display:flex;justify-content:space-between;padding:18px 38px}.admin-page-kicker{color:#09a954;display:block;font-size:10px;font-weight:800;letter-spacing:1.5px}.admin-topbar strong{color:#17345d;font-size:15px}.admin-status{color:#657782;font-size:11px}.admin-status i{color:#09b85b;font-size:8px;margin-right:5px}.admin-menu-toggle{display:none}@media(max-width:900px){.admin-sidebar{flex-basis:225px}.admin-topbar{padding:16px 22px}}@media(max-width:700px){.admin-sidebar{bottom:0;left:-270px;position:fixed;transition:left .2s;z-index:20}.admin-sidebar.open{left:0}.admin-main{width:100%}.admin-menu-toggle{background:#102a43;border:0;border-radius:5px;color:#fff;display:block;font-size:18px;padding:8px 11px;position:fixed;right:15px;top:12px;z-index:30}.admin-topbar{padding-right:65px}.admin-status{display:none}}
+        /* Modern SaaS Variables */
+        :root {
+            --admin-bg: #f8fafc;
+            --admin-text: #334155;
+            --sidebar-bg: #0f172a;
+            --sidebar-text: #ffffff; /* Changed to white as per user request */
+            --sidebar-hover: #1e293b;
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --success: #10b981;
+            --border-color: #e2e8f0;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+
+        body.admin-body { font-family: 'Poppins', sans-serif; background: var(--admin-bg); color: var(--admin-text); overflow-x: hidden; }
+        .admin-shell { display: flex; min-height: 100vh; position: relative; }
+        
+        /* Sidebar Styling */
+        .admin-sidebar { background: var(--sidebar-bg); color: var(--sidebar-text); display: flex; flex-direction: column; flex: 0 0 260px; min-height: 100vh; padding: 25px 20px; position: sticky; top: 0; z-index: 1040; transition: transform 0.3s ease; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
+        .admin-brand { align-items: center; color: #fff; display: flex; gap: 12px; margin: 0 5px 30px; text-decoration: none; }
+        .admin-brand-logo { height: 38px; width: 38px; object-fit: contain; border-radius: 8px; background: #fff; padding: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .admin-brand strong { display: block; font-size: 13px; font-weight: 600; letter-spacing: .5px; }
+        .admin-brand small { color: var(--success); display: block; font-size: 10px; font-weight: 500; margin-top: 2px; }
+        
+        .admin-user { align-items: center; display: flex; font-size: 13px; gap: 12px; margin: 0 5px 25px; padding: 5px 0; }
+        .admin-user > i { color: var(--success); font-size: 18px; }
+        .admin-user span { color: #f1f5f9; font-weight: 500; }
+        .admin-user small { color: #94a3b8; display: block; font-size: 11px; margin-top: 2px; font-weight: 400; }
+        
+        .admin-nav { flex: 1; }
+        .admin-nav p { color: #94a3b8; font-size: 11px; font-weight: 600; letter-spacing: 1.2px; margin: 25px 10px 10px; text-transform: uppercase; }
+        .admin-nav a, .admin-sidebar-bottom a, .admin-sidebar-bottom button { align-items: center; background: transparent; border: 0; border-radius: 8px; color: var(--sidebar-text); display: flex; font-size: 14px; font-weight: 500; gap: 14px; margin: 4px 0; padding: 12px 15px; text-align: left; text-decoration: none; width: 100%; transition: all 0.2s ease; }
+        .admin-nav a i, .admin-sidebar-bottom i { color: var(--sidebar-text); width: 18px; font-size: 15px; text-align: center; transition: color 0.2s ease; opacity: 0.9; }
+        .admin-nav a:hover { background: var(--sidebar-hover); color: #ffffff; }
+        .admin-nav a:hover i { color: #ffffff; opacity: 1; }
+        .admin-nav a.active { background: var(--primary); color: #fff; box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2); }
+        .admin-nav a.active i { color: #fff; }
+        
+        .admin-sidebar-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 15px; margin-top: auto; }
+        .admin-sidebar-bottom form { margin: 0; }
+        .admin-sidebar-bottom button { cursor: pointer; }
+        .admin-sidebar-bottom a:hover, .admin-sidebar-bottom button:hover { color: #fff; background: var(--sidebar-hover); }
+        
+        /* Main Area & Topbar */
+        .admin-main { flex: 1; min-width: 0; width: 100%; display: flex; flex-direction: column; }
+        .admin-topbar { align-items: center; background: #fff; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; padding: 18px 40px; position: sticky; top: 0; z-index: 1030; }
+        .admin-page-kicker { color: var(--primary); display: block; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+        .admin-topbar strong { color: #1e293b; font-size: 18px; font-weight: 600; }
+        .admin-status { color: #64748b; font-size: 12px; font-weight: 500; display: flex; align-items: center; background: #f1f5f9; padding: 6px 12px; border-radius: 20px; }
+        .admin-status i { color: var(--success); font-size: 8px; margin-right: 6px; }
+        .admin-menu-toggle { display: none; }
+        
+        /* General Layout */
+        main { padding: 30px 40px; flex: 1; }
+        .card { border: 1px solid var(--border-color); border-radius: 12px; box-shadow: var(--card-shadow); margin-bottom: 24px; transition: transform 0.2s, box-shadow 0.2s; }
+        .section-title { font-size: 1.5rem; font-weight: 600; color: #0f172a; }
+        
+        /* SaaS Forms */
+        .form-control, .form-select { border-color: #cbd5e1; border-radius: 8px; padding: 10px 15px; font-size: 14px; color: #334155; transition: all 0.2s; }
+        .form-control:focus, .form-select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+        .form-label { font-weight: 500; color: #475569; font-size: 13px; margin-bottom: 6px; }
+        
+        /* SaaS Buttons */
+        .btn { border-radius: 8px; padding: 8px 16px; font-weight: 500; font-size: 14px; transition: all 0.2s; }
+        .btn-primary, .btn-primary-custom, .btn-green, .btn-darkblue { background-color: var(--primary); border: 1px solid var(--primary); color: #fff; }
+        .btn-primary:hover, .btn-primary-custom:hover, .btn-green:hover, .btn-darkblue:hover { background-color: var(--primary-hover); border-color: var(--primary-hover); color: #fff; }
+        
+        /* Mobile Overlay */
+        .admin-sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); z-index: 1030; backdrop-filter: blur(4px); transition: opacity 0.3s; opacity: 0; }
+        .admin-sidebar-overlay.show { display: block; opacity: 1; }
+
+        @media (max-width: 991px) {
+            .admin-sidebar { flex-basis: 240px; }
+            .admin-topbar { padding: 16px 24px; }
+            main { padding: 24px; }
+        }
+
+        @media (max-width: 768px) {
+            .admin-sidebar { position: fixed; bottom: 0; left: 0; transform: translateX(-100%); }
+            .admin-sidebar.open { transform: translateX(0); }
+            .admin-menu-toggle { 
+                background: var(--sidebar-bg); 
+                border: 0; 
+                border-radius: 8px; 
+                color: #fff; 
+                display: block; 
+                font-size: 18px; 
+                padding: 10px 14px; 
+                position: fixed; 
+                right: 15px; 
+                top: 15px; 
+                z-index: 1050; 
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            }
+            .admin-topbar { padding: 16px 70px 16px 20px; }
+            .admin-status { display: none; }
+            main { padding: 20px 15px; }
+        }
     </style>
-    <script>document.querySelector('[data-admin-menu-toggle]').addEventListener('click',function(){document.querySelector('[data-admin-sidebar]').classList.toggle('open')});</script>
+    <div class="admin-sidebar-overlay" data-admin-sidebar-overlay></div>
+    <script>
+        const menuToggle = document.querySelector('[data-admin-menu-toggle]');
+        const sidebar = document.querySelector('[data-admin-sidebar]');
+        const overlay = document.querySelector('[data-admin-sidebar-overlay]');
+
+        menuToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('show');
+        });
+
+        overlay.addEventListener('click', function() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('show');
+        });
+    </script>
 </body>
 </html>

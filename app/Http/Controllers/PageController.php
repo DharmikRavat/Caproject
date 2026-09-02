@@ -102,7 +102,7 @@ class PageController extends Controller
             }
         }
 
-        $blogs = $query->orderBy('published_date', 'desc')->paginate(3)->appends(request()->query());
+        $blogs = $query->orderBy('published_date', 'desc')->paginate(9)->appends(request()->query());
         $sidebarData = $this->getBlogSidebarData();
 
         return view('blogs', array_merge(compact('blogs'), $sidebarData));
